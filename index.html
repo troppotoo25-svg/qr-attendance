@@ -85,16 +85,14 @@ const SCRIPT_URL =
 "https://script.google.com/macros/s/AKfycbz3DN4OTGV5bv9idMD689T9raM2doRyk-NGCm3pTXdrc3DIiV0gQrbgCJ7fvD6aJep0/exec";
 
 let scanLock = false;
+
 let lastScan = "";
 
 const beep = new Audio(
 "https://actions.google.com/sounds/v1/cartoon/wood_plank_flicks.ogg"
 );
 
-startBtn.addEventListener(
-"click",
-startScanner
-);
+startBtn.onclick = startScanner;
 
 async function startScanner(){
 
@@ -133,12 +131,8 @@ if(result){
 const text =
 result.getText().trim();
 
-if(
-scanLock ||
-text === lastScan
-){
+if(scanLock || text === lastScan)
 return;
-}
 
 scanLock = true;
 
@@ -163,17 +157,14 @@ adm:text
 
 })
 
-.then(response => response.text())
+.then(res => res.text())
 
-.then(text => {
+.then(response => {
 
-console.log(text);
-
-let data =
-JSON.parse(text);
+console.log(response);
 
 msg.innerHTML =
-data.message;
+response;
 
 setTimeout(() => {
 
@@ -197,15 +188,6 @@ msg.innerHTML =
 scanLock = false;
 
 });
-
-}
-
-if(
-err &&
-!(err instanceof ZXing.NotFoundException)
-){
-
-console.log(err);
 
 }
 
