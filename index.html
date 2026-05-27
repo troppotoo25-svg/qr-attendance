@@ -166,7 +166,23 @@ adm:text
 
 })
 
-.then(res => res.json())
+.then(async res => {
+
+const text = await res.text();
+
+console.log(text);
+
+try{
+
+return JSON.parse(text);
+
+}catch(e){
+
+throw new Error(text);
+
+}
+
+})
 
 .then(data => {
 
