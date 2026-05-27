@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<script src="https://cdn.jsdelivr.net/npm/@zxing/library@0.20.0"></script>
+
+<title>QR Attendance Scanner</title>
+
+<style>
+
+body{
+font-family:Arial;
+text-align:center;
+background:#f2f2f2;
+padding:20px;
+}
+
+h2{
+color:#0b57d0;
+}
+
+video{
+width:100%;
+max-width:420px;
+height:320px;
+border:3px solid #0b57d0;
+border-radius:12px;
+background:black;
+object-fit:cover;
+}
+
+button{
+padding:15px;
+font-size:18px;
+background:#0b57d0;
+color:white;
+border:none;
+border-radius:10px;
+margin-top:15px;
+cursor:pointer;
+}
+
+#msg{
+margin-top:15px;
+font-size:20px;
+font-weight:bold;
+color:#0b57d0;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<h2>QR Attendance Scanner</h2>
+
+<video id="video" autoplay playsinline></video>
+
+<br>
+
+<button onclick="startScanner()">START CAMERA</button>
+
+<div id="msg">Ready</div>
+
+<script>
+
+const video = document.getElementById("video");
+const msg = document.getElementById("msg");
+
+let scanLock = false;
+let lastScan = "";
+
+// 🔴 PUT YOUR APPS SCRIPT LINK HERE LATER
+const SCRIPT_URL = "PASTE_YOUR_SCRIPT_URL_HERE";
+
+const beep = new Audio("https://actions.google.com/sounds/v1/cartoon/wood_plank_flicks.ogg");
+
+async function startScanner(){
+
+try{
+
+msg.innerHTML = "Starting camera...";
+
+const stream = await navigator.mediaDevices.getUserMedia({
+  video: { facingMode: "environment" },
+  audio: false
+});
+
+video.srcObject = stream;
+await video.play();
+
+msg.innerHTML = "Camera started. Scanning...";
+
+setTimeout(() => {
+
+const codeReader = new ZXing.BrowserQRCodeReader();
+
+codeReader.decodeFromVideoElement(video, (result, err) => {
+
+if(result){
+
+const text = result.getText().trim();
+
+if(scanLock || text === lastScan) return;
+
+scanLock = true;
+lastScan = text;
+
+beep.play();
+
+msg.innerHTML = "Sending to server...";
+
+// backend will connect next step
+
+}
+
+if(err && !(err instanceof ZXing.NotFoundException)){
+console.log(err);
+}
+
+});
+
+}, 1000);
+
+}catch(e){
+
+msg.innerHTML = "CAMERA ERROR: " + e.name + " - " + e.message;
+
+}
+
+}
+
+</script>
+
+</body>
+</html>
