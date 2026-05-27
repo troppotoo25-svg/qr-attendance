@@ -7,6 +7,7 @@
 
 <title>QR Attendance Scanner</title>
 
+<!-- ZXING -->
 <script src="https://unpkg.com/@zxing/library@latest"></script>
 
 <style>
@@ -59,11 +60,7 @@ word-wrap:break-word;
 
 <h2>QR Attendance Scanner</h2>
 
-<video
-id="video"
-autoplay
-playsinline>
-</video>
+<video id="video" autoplay playsinline></video>
 
 <br>
 
@@ -83,33 +80,33 @@ document.getElementById("video");
 const msg =
 document.getElementById("msg");
 
-/* ===== APPS SCRIPT URL ===== */
-
 const SCRIPT_URL =
 "https://script.google.com/macros/s/AKfycbz3DN4OTGV5bv9idMD689T9raM2doRyk-NGCm3pTXdrc3DIiV0gQrbgCJ7fvD6aJep0/exec";
 
-/* ===== VARIABLES ===== */
-
 let scanLock = false;
-
 let lastScan = "";
-
-/* ===== SOUND ===== */
 
 const beep = new Audio(
 "https://actions.google.com/sounds/v1/cartoon/wood_plank_flicks.ogg"
 );
 
-/* ===== START SCANNER ===== */
-
 async function startScanner(){
 
 try{
 
+/* CHECK ZXING */
+
+if(typeof ZXing === "undefined"){
+
+msg.innerHTML =
+"ZXing library failed to load";
+
+return;
+
+}
+
 msg.innerHTML =
 "Opening camera...";
-
-/* OPEN CAMERA */
 
 const stream =
 await navigator.mediaDevices.getUserMedia({
@@ -126,8 +123,6 @@ await video.play();
 msg.innerHTML =
 "Scanning QR code...";
 
-/* STRONG QR READER */
-
 const codeReader =
 new ZXing.BrowserMultiFormatReader();
 
@@ -138,26 +133,13 @@ video,
 
 (result, err) => {
 
-/* QR FOUND */
-
 if(result){
 
 const text =
 result.getText().trim();
 
-console.log(
-"SCANNED:",
-text
-);
-
-/* PREVENT DUPLICATES */
-
-if(
-scanLock ||
-text === lastScan
-){
+if(scanLock || text === lastScan)
 return;
-}
 
 scanLock = true;
 
@@ -191,8 +173,6 @@ adm:text
 msg.innerHTML =
 data.message;
 
-/* RESET */
-
 setTimeout(() => {
 
 scanLock = false;
@@ -218,8 +198,6 @@ scanLock = false;
 });
 
 }
-
-/* IGNORE NORMAL SCAN ERRORS */
 
 if(
 err &&
