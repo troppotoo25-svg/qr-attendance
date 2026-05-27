@@ -7,7 +7,6 @@
 
 <title>QR Attendance Scanner</title>
 
-<!-- ZXING -->
 <script src="https://unpkg.com/@zxing/library@latest"></script>
 
 <style>
@@ -49,7 +48,6 @@ margin-top:20px;
 font-size:20px;
 font-weight:bold;
 color:#0b57d0;
-word-wrap:break-word;
 }
 
 </style>
@@ -64,7 +62,7 @@ word-wrap:break-word;
 
 <br>
 
-<button onclick="startScanner()">
+<button id="startBtn">
 START CAMERA
 </button>
 
@@ -80,8 +78,11 @@ document.getElementById("video");
 const msg =
 document.getElementById("msg");
 
+const startBtn =
+document.getElementById("startBtn");
+
 const SCRIPT_URL =
-"https://script.google.com/macros/s/AKfycbwlQl7zFPBggRmYfe1CJ3R3WV5iotGXYMuCvTK7-FEwbC1W8u6bzSohKWMbmIJesANk/exec";
+"https://script.google.com/macros/s/AKfycbz3DN4OTGV5bv9idMD689T9raM2doRyk-NGCm3pTXdrc3DIiV0gQrbgCJ7fvD6aJep0/exec";
 
 let scanLock = false;
 let lastScan = "";
@@ -90,20 +91,14 @@ const beep = new Audio(
 "https://actions.google.com/sounds/v1/cartoon/wood_plank_flicks.ogg"
 );
 
+startBtn.addEventListener(
+"click",
+startScanner
+);
+
 async function startScanner(){
 
 try{
-
-/* CHECK ZXING */
-
-if(typeof ZXing === "undefined"){
-
-msg.innerHTML =
-"ZXing library failed to load";
-
-return;
-
-}
 
 msg.innerHTML =
 "Opening camera...";
@@ -138,8 +133,12 @@ if(result){
 const text =
 result.getText().trim();
 
-if(scanLock || text === lastScan)
+if(
+scanLock ||
+text === lastScan
+){
 return;
+}
 
 scanLock = true;
 
@@ -149,8 +148,6 @@ beep.play();
 
 msg.innerHTML =
 "QR DETECTED: " + text;
-
-/* SEND TO APPS SCRIPT */
 
 fetch(SCRIPT_URL, {
 
@@ -166,25 +163,14 @@ adm:text
 
 })
 
-.then(async res => {
+.then(response => response.text())
 
-const text = await res.text();
+.then(text => {
 
 console.log(text);
 
-try{
-
-return JSON.parse(text);
-
-}catch(e){
-
-throw new Error(text);
-
-}
-
-})
-
-.then(data => {
+let data =
+JSON.parse(text);
 
 msg.innerHTML =
 data.message;
@@ -192,32 +178,26 @@ data.message;
 setTimeout(() => {
 
 scanLock = false;
-
 lastScan = "";
 
 msg.innerHTML =
-"Ready for next scan";
+"Ready";
 
 }, 3000);
 
 })
 
-.catch(async error => {
+.catch(error => {
 
 console.log(error);
 
 msg.innerHTML =
-"ERROR CHECK CONSOLE";
-
-alert(
-"Open browser console:\n\nPress F12\nThen click Console"
-);
+"SERVER ERROR";
 
 scanLock = false;
 
 });
 
-});
 }
 
 if(
@@ -235,10 +215,10 @@ console.log(err);
 
 }catch(e){
 
+console.log(e);
+
 msg.innerHTML =
 "CAMERA ERROR: " + e.message;
-
-console.log(e);
 
 }
 
