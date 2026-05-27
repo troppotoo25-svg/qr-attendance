@@ -202,17 +202,20 @@ msg.innerHTML =
 
 })
 
-.catch(error => {
-
-msg.innerHTML =
-"SERVER ERROR";
+.catch(async error => {
 
 console.log(error);
+
+msg.innerHTML =
+"ERROR CHECK CONSOLE";
+
+alert(
+"Open browser console:\n\nPress F12\nThen click Console"
+);
 
 scanLock = false;
 
 });
-
 }
 
 if(
