@@ -1,0 +1,279 @@
+```html id="dashboardfull001"
+<!DOCTYPE html>
+<html>
+
+<head>
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<title>Attendance Dashboard</title>
+
+<style>
+
+body{
+font-family:Arial;
+background:#f2f2f2;
+padding:20px;
+}
+
+h2{
+color:#0b57d0;
+text-align:center;
+}
+
+.card{
+background:white;
+padding:20px;
+border-radius:10px;
+max-width:900px;
+margin:auto;
+box-shadow:0 2px 10px rgba(0,0,0,0.1);
+}
+
+select,
+input,
+button{
+
+padding:12px;
+margin:10px;
+font-size:16px;
+
+}
+
+button{
+background:#0b57d0;
+color:white;
+border:none;
+border-radius:8px;
+cursor:pointer;
+}
+
+table{
+
+width:100%;
+border-collapse:collapse;
+margin-top:20px;
+
+}
+
+th,td{
+
+border:1px solid #ccc;
+padding:12px;
+text-align:center;
+
+}
+
+th{
+background:#0b57d0;
+color:white;
+}
+
+.present{
+background:#d4edda;
+}
+
+.late{
+background:#fff3cd;
+}
+
+.absent{
+background:#f8d7da;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="card">
+
+<h2>Attendance Dashboard</h2>
+
+<label>Select Class:</label>
+
+<select id="classSelect">
+
+<option value="Grade 7">
+Grade 7
+</option>
+
+<option value="Grade 8">
+Grade 8
+</option>
+
+<option value="Grade 9">
+Grade 9
+</option>
+
+</select>
+
+<label>Select Date:</label>
+
+<input
+type="date"
+id="dateInput">
+
+<button onclick="loadStudents()">
+LOAD STUDENTS
+</button>
+
+<table>
+
+<thead>
+
+<tr>
+
+<th>ADM</th>
+<th>NAME</th>
+<th>STATUS</th>
+
+</tr>
+
+</thead>
+
+<tbody id="studentBody">
+
+</tbody>
+
+</table>
+
+<button onclick="saveAttendance()">
+SAVE ATTENDANCE
+</button>
+
+</div>
+
+<script>
+
+const SCRIPT_URL =
+"https://script.google.com/macros/s/AKfycbyVDy_AlufbbL4lQcQ9nMd2WM06IbRCl_UY5bOTez-0zjrORGgyucrErZPecap0Mw/exec";
+
+const students = {
+
+"Grade 7":[
+
+{
+adm:"1001",
+name:"John Doe"
+},
+
+{
+adm:"1002",
+name:"Mary Anne"
+}
+
+],
+
+"Grade 8":[
+
+{
+adm:"1003",
+name:"Brian Kim"
+}
+
+],
+
+"Grade 9":[]
+
+};
+
+function loadStudents(){
+
+const className =
+document.getElementById("classSelect").value;
+
+const tbody =
+document.getElementById("studentBody");
+
+tbody.innerHTML = "";
+
+students[className].forEach(student => {
+
+const row =
+document.createElement("tr");
+
+row.innerHTML = `
+
+<td>${student.adm}</td>
+
+<td>${student.name}</td>
+
+<td>
+
+<select>
+
+<option value="PRESENT">
+PRESENT
+</option>
+
+<option value="LATE">
+LATE
+</option>
+
+<option value="ABSENT">
+ABSENT
+</option>
+
+</select>
+
+</td>
+
+`;
+
+tbody.appendChild(row);
+
+});
+
+}
+
+function saveAttendance(){
+
+const rows =
+document.querySelectorAll("#studentBody tr");
+
+rows.forEach(row => {
+
+const cells =
+row.querySelectorAll("td");
+
+const adm =
+cells[0].innerText;
+
+const status =
+cells[2]
+.querySelector("select")
+.value;
+
+const formData =
+new FormData();
+
+formData.append(
+"adm",
+adm
+);
+
+fetch(SCRIPT_URL,{
+
+method:"POST",
+body:formData
+
+});
+
+console.log(
+adm + " : " + status
+);
+
+});
+
+alert("Attendance Saved");
+
+}
+
+</script>
+
+</body>
+
+</html>
+```
