@@ -1,4 +1,4 @@
-```html id="g5r8xp"
+```html id="m9q2vk"
 <!DOCTYPE html>
 <html>
 
@@ -52,6 +52,10 @@ color:#0b57d0;
 word-wrap:break-word;
 }
 
+iframe{
+display:none;
+}
+
 </style>
 
 </head>
@@ -72,6 +76,20 @@ START CAMERA
 Ready
 </div>
 
+<iframe name="hiddenFrame"></iframe>
+
+<form id="hiddenForm"
+target="hiddenFrame"
+method="POST"
+action="https://script.google.com/macros/s/AKfycbwFyA97InsqaXOglYdpffawwzGJaWCEgBZh2u9kaifNaWfJKJ10IAiXdozNRSpRCFk_/exec">
+
+<input
+type="hidden"
+name="data"
+id="hiddenData">
+
+</form>
+
 <script>
 
 const video =
@@ -83,8 +101,11 @@ document.getElementById("msg");
 const startBtn =
 document.getElementById("startBtn");
 
-const SCRIPT_URL =
-"https://script.google.com/macros/s/AKfycbzXFMEfiHTnk2UrOyPTys33hSYotzu3v-jmS4w6bt1aG2PhXb-iYyPFwJhl7CKYNKSj/exec";
+const hiddenForm =
+document.getElementById("hiddenForm");
+
+const hiddenData =
+document.getElementById("hiddenData");
 
 let scanLock = false;
 
@@ -148,31 +169,15 @@ beep.play();
 msg.innerHTML =
 "QR DETECTED: " + text;
 
-fetch(SCRIPT_URL, {
-
-method:"POST",
-
-headers:{
-"Content-Type":"text/plain"
-},
-
-body:JSON.stringify({
+hiddenData.value =
+JSON.stringify({
 adm:text
-})
+});
 
-})
-
-.then(response => response.text())
-
-.then(data => {
-
-console.log(data);
-
-const result =
-JSON.parse(data);
+hiddenForm.submit();
 
 msg.innerHTML =
-result.message;
+"Attendance Saved";
 
 setTimeout(() => {
 
@@ -184,19 +189,6 @@ msg.innerHTML =
 "Ready";
 
 },3000);
-
-})
-
-.catch(error => {
-
-console.log(error);
-
-msg.innerHTML =
-"SERVER ERROR: " + error;
-
-scanLock = false;
-
-});
 
 }
 
