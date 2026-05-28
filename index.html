@@ -1,4 +1,4 @@
-```html id="m9q2vk"
+```html
 <!DOCTYPE html>
 <html>
 
@@ -78,15 +78,16 @@ Ready
 
 <iframe name="hiddenFrame"></iframe>
 
-<form id="hiddenForm"
+<form
+id="hiddenForm"
 target="hiddenFrame"
 method="POST"
 action="https://script.google.com/macros/s/AKfycbwmleRcnBEBfUPvuGaHtbqvZAxxfEjUM_0rJ-hdnqU6YoonOsKx43hPcDAIT0CitU67/exec">
 
 <input
 type="hidden"
-name="data"
-id="hiddenData">
+name="adm"
+id="hiddenAdm">
 
 </form>
 
@@ -104,12 +105,10 @@ document.getElementById("startBtn");
 const hiddenForm =
 document.getElementById("hiddenForm");
 
-const hiddenData =
-document.getElementById("hiddenData");
+const hiddenAdm =
+document.getElementById("hiddenAdm");
 
 let scanLock = false;
-
-let lastScan = "";
 
 const beep = new Audio(
 "https://actions.google.com/sounds/v1/cartoon/wood_plank_flicks.ogg"
@@ -119,97 +118,86 @@ startBtn.onclick = startScanner;
 
 async function startScanner(){
 
-try{
+  try{
 
-msg.innerHTML =
-"Opening camera...";
+    msg.innerHTML =
+    "Opening camera...";
 
-const stream =
-await navigator.mediaDevices.getUserMedia({
+    const stream =
+    await navigator.mediaDevices.getUserMedia({
 
-video:{
-facingMode:"environment"
-},
+      video:{
+        facingMode:"environment"
+      },
 
-audio:false
+      audio:false
 
-});
+    });
 
-video.srcObject = stream;
+    video.srcObject = stream;
 
-await video.play();
+    await video.play();
 
-msg.innerHTML =
-"Scanning QR code...";
+    msg.innerHTML =
+    "Scanning QR code...";
 
-const codeReader =
-new ZXing.BrowserMultiFormatReader();
+    const codeReader =
+    new ZXing.BrowserMultiFormatReader();
 
-codeReader.decodeFromVideoDevice(
+    codeReader.decodeFromVideoDevice(
 
-null,
-video,
+      null,
+      video,
 
-(result, err) => {
+      (result, err) => {
 
-if(result){
+        if(result){
 
-const text =
-result.getText().trim();
+          if(scanLock)
+          return;
 
-if(scanLock || text === lastScan)
-return;
+          scanLock = true;
 
-scanLock = true;
+          const text =
+          result.getText().trim();
 
-lastScan = text;
-```
+          beep.play();
 
+          msg.innerHTML =
+          "QR DETECTED: " + text;
 
-scanLock = true;
+          hiddenAdm.value = text;
 
-lastScan = text;
+          hiddenForm.submit();
 
-beep.play();
+          msg.innerHTML =
+          "Attendance Saved";
 
-msg.innerHTML =
-"QR DETECTED: " + text;
+          setTimeout(() => {
 
-hiddenData.value =
-JSON.stringify({
-adm:text
-});
+            scanLock = false;
 
-hiddenForm.submit();
+            msg.innerHTML =
+            "Ready";
 
-msg.innerHTML =
-"Attendance Saved";
+          },3000);
 
-setTimeout(() => {
+        }
 
-scanLock = false;
+      }
 
-lastScan = "";
+    );
 
-msg.innerHTML =
-"Ready";
+  }
 
-},3000);
+  catch(e){
 
-}
+    console.log(e);
 
-}
+    msg.innerHTML =
+    "CAMERA ERROR: " + e.message;
 
-);
-
-}catch(e){
-
-console.log(e);
-
-msg.innerHTML =
-"CAMERA ERROR: " + e.message;
-
-}
+  }
 
 }
 
