@@ -1,4 +1,4 @@
-```html id="r7k2mv"
+```html id="g5r8xp"
 <!DOCTYPE html>
 <html>
 
@@ -83,8 +83,6 @@ document.getElementById("msg");
 const startBtn =
 document.getElementById("startBtn");
 
-/* PUT YOUR APPS SCRIPT URL HERE */
-
 const SCRIPT_URL =
 "https://script.google.com/macros/s/AKfycbwFyA97InsqaXOglYdpffawwzGJaWCEgBZh2u9kaifNaWfJKJ10IAiXdozNRSpRCFk_/exec";
 
@@ -154,10 +152,8 @@ fetch(SCRIPT_URL, {
 
 method:"POST",
 
-mode:"cors",
-
 headers:{
-"Content-Type":"application/json"
+"Content-Type":"text/plain"
 },
 
 body:JSON.stringify({
@@ -166,29 +162,17 @@ adm:text
 
 })
 
-.then(async res => {
+.then(response => response.text())
 
-const textData =
-await res.text();
+.then(data => {
 
-console.log(textData);
+console.log(data);
 
-try{
-
-const response =
-JSON.parse(textData);
+const result =
+JSON.parse(data);
 
 msg.innerHTML =
-response.message;
-
-}catch(e){
-
-msg.innerHTML =
-"INVALID SERVER RESPONSE";
-
-console.log(e);
-
-}
+result.message;
 
 setTimeout(() => {
 
