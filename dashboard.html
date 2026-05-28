@@ -249,10 +249,18 @@ cells[2]
 const formData =
 new FormData();
 
+```javascript id="new001"
 formData.append(
 "adm",
 adm
 );
+
+formData.append(
+"status",
+status
+);
+```
+
 
 fetch(SCRIPT_URL,{
 
