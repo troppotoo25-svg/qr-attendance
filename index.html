@@ -153,10 +153,15 @@ async function startScanner(){
 
         if(result){
 
-          if(scanLock)
-          return;
+          ```javascript id="q7x2mp"
+if(scanLock)
+return;
 
-          scanLock = true;
+scanLock = true;
+
+codeReader.reset();
+```
+
 
           const text =
           result.getText().trim();
@@ -173,14 +178,18 @@ async function startScanner(){
           msg.innerHTML =
           "Attendance Saved";
 
-          setTimeout(() => {
+          ```javascript id="m2q8vc"
+setTimeout(async () => {
 
-            scanLock = false;
+  scanLock = false;
 
-            msg.innerHTML =
-            "Ready";
+  msg.innerHTML =
+  "Scanning QR code...";
 
-          },3000);
+  startScanner();
+
+},5000);
+```
 
         }
 
