@@ -82,7 +82,8 @@ const startBtn =
 document.getElementById("startBtn");
 
 const SCRIPT_URL =
-"https://script.google.com/macros/s/AKfycbywg0faWOy1-HTNldz7dZxKZfCqXGKtK5_bztdDqDmlhjai-TUGJaXi0IU7eYYe8lVN/execc";
+"hconst SCRIPT_URL =
+"https://script.google.com/macros/s/AKfycbywg0faWOy1-HTNldz7dZxKZfCqXGKtK5_bztdDqDmlhjai-TUGJaXi0IU7eYYe8lVN/exec";
 
 let scanLock = false;
 
@@ -157,14 +158,14 @@ adm:text
 
 })
 
-.then(res => res.text())
+.then(res => res.json())
 
 .then(response => {
 
 console.log(response);
 
 msg.innerHTML =
-response;
+response.message;
 
 setTimeout(() => {
 
