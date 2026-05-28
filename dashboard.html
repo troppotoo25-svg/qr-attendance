@@ -69,18 +69,6 @@ background:#0b57d0;
 color:white;
 }
 
-.present{
-background:#d4edda;
-}
-
-.late{
-background:#fff3cd;
-}
-
-.absent{
-background:#f8d7da;
-}
-
 </style>
 
 </head>
@@ -93,7 +81,6 @@ background:#f8d7da;
 
 <label>Select Class:</label>
 
-```html id="newclasses001"
 <select id="classSelect">
 
 <option value="Grade 1">Grade 1</option>
@@ -110,8 +97,6 @@ background:#f8d7da;
 <option value="Grade 12">Grade 12</option>
 
 </select>
-```
-
 
 <label>Select Date:</label>
 
@@ -143,69 +128,59 @@ LOAD STUDENTS
 
 </table>
 
-<button onclick="saveAttendance()">
-SAVE ATTENDANCE
-</button>
-
 </div>
 
 <script>
 
-const SCRIPT_URL =
-"https://script.google.com/macros/s/AKfycbyVDy_AlufbbL4lQcQ9nMd2WM06IbRCl_UY5bOTez-0zjrORGgyucrErZPecap0Mw/exec";
-
-```javascript id="newstudents001"
-const students = {
-
-"Grade 1":[],
-"Grade 2":[],
-"Grade 3":[],
-"Grade 4":[],
-"Grade 5":[],
-"Grade 6":[],
-
-"Grade 7":[
-
-{
-adm:"1001",
-name:"John Doe"
-},
-
-{
-adm:"1002",
-name:"Mary Anne"
-}
-
-],
-
-"Grade 8":[
-
-{
-adm:"1003",
-name:"Brian Kim"
-}
-
-],
-
-"Grade 9":[],
-"Grade 10":[],
-"Grade 11":[],
-"Grade 12":[]
-
-};
-```
-
-function loadStudents(){
+async function loadStudents(){
 
 const className =
-document.getElementById("classSelect").value;
+document.getElementById(
+"classSelect"
+).value;
+
+const date =
+document.getElementById(
+"dateInput"
+).value;
 
 const tbody =
-document.getElementById("studentBody");
+document.getElementById(
+"studentBody"
+);
+
+tbody.innerHTML =
+"<tr><td colspan='3'>Loading...</td></tr>";
+
+const response =
+await fetch(
+
+"https://script.google.com/macros/s/AKfycbyVDy_AlufbbL4lQcQ9nMd2WM06IbRCl_UY5bOTez-0zjrORGgyucrErZPecap0Mw/exec?class="
+
++ encodeURIComponent(className)
+
++ "&date="
+
++ encodeURIComponent(date)
+
+);
+
+const data =
+await response.json();
 
 tbody.innerHTML = "";
 
-students[className].forEach(student => {
+if(data.length === 0){
+
+tbody.innerHTML =
+
+"<tr><td colspan='3'>No attendance found</td></tr>";
+
+return;
+
+}
+
+data.forEach(student => {
 
 const row =
 document.createElement("tr");
@@ -216,25 +191,7 @@ row.innerHTML = `
 
 <td>${student.name}</td>
 
-<td>
-
-<select>
-
-<option value="PRESENT">
-PRESENT
-</option>
-
-<option value="LATE">
-LATE
-</option>
-
-<option value="ABSENT">
-ABSENT
-</option>
-
-</select>
-
-</td>
+<td>${student.status}</td>
 
 `;
 
@@ -244,60 +201,8 @@ tbody.appendChild(row);
 
 }
 
-function saveAttendance(){
-
-const rows =
-document.querySelectorAll("#studentBody tr");
-
-rows.forEach(row => {
-
-const cells =
-row.querySelectorAll("td");
-
-const adm =
-cells[0].innerText;
-
-const status =
-cells[2]
-.querySelector("select")
-.value;
-
-const formData =
-new FormData();
-
-```javascript id="new001"
-formData.append(
-"adm",
-adm
-);
-
-formData.append(
-"status",
-status
-);
-```
-
-
-fetch(SCRIPT_URL,{
-
-method:"POST",
-body:formData
-
-});
-
-console.log(
-adm + " : " + status
-);
-
-});
-
-alert("Attendance Saved");
-
-}
-
 </script>
 
 </body>
 
 </html>
-```
