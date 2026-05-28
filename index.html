@@ -1,4 +1,4 @@
-```html
+```html id="r7k2mv"
 <!DOCTYPE html>
 <html>
 
@@ -49,6 +49,7 @@ margin-top:20px;
 font-size:20px;
 font-weight:bold;
 color:#0b57d0;
+word-wrap:break-word;
 }
 
 </style>
@@ -82,8 +83,10 @@ document.getElementById("msg");
 const startBtn =
 document.getElementById("startBtn");
 
+/* PUT YOUR APPS SCRIPT URL HERE */
+
 const SCRIPT_URL =
-"https://script.google.com/macros/s/AKfycbxZc90-vwJcdgC0Z6XRXWVSYSwOADtVy_BICN-W4EocGZLznxpyL9hWae5xivxz3Rhk/exec";
+"https://script.google.com/macros/s/AKfycbxxxxxxxxxxxxxxxxxxxxxxxxxxxx/exec";
 
 let scanLock = false;
 
@@ -108,6 +111,7 @@ await navigator.mediaDevices.getUserMedia({
 video:{
 facingMode:"environment"
 },
+
 audio:false
 
 });
@@ -150,6 +154,8 @@ fetch(SCRIPT_URL, {
 
 method:"POST",
 
+mode:"cors",
+
 headers:{
 "Content-Type":"application/json"
 },
@@ -160,24 +166,40 @@ adm:text
 
 })
 
-.then(res => res.json())
+.then(async res => {
 
-.then(response => {
+const textData =
+await res.text();
 
-console.log(response);
+console.log(textData);
+
+try{
+
+const response =
+JSON.parse(textData);
 
 msg.innerHTML =
 response.message;
 
+}catch(e){
+
+msg.innerHTML =
+"INVALID SERVER RESPONSE";
+
+console.log(e);
+
+}
+
 setTimeout(() => {
 
 scanLock = false;
+
 lastScan = "";
 
 msg.innerHTML =
 "Ready";
 
-}, 3000);
+},3000);
 
 })
 
@@ -186,7 +208,7 @@ msg.innerHTML =
 console.log(error);
 
 msg.innerHTML =
-"SERVER ERROR";
+"SERVER ERROR: " + error;
 
 scanLock = false;
 
