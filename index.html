@@ -93,6 +93,9 @@ id="hiddenAdm">
 
 <script>
 
+```html id="x8m4qp"
+<script>
+
 const video =
 document.getElementById("video");
 
@@ -109,6 +112,8 @@ const hiddenAdm =
 document.getElementById("hiddenAdm");
 
 let scanLock = false;
+
+let lastScanTime = 0;
 
 const beep = new Audio(
 "https://actions.google.com/sounds/v1/cartoon/wood_plank_flicks.ogg"
@@ -153,15 +158,18 @@ async function startScanner(){
 
         if(result){
 
-          ```javascript id="q7x2mp"
-if(scanLock)
-return;
+          const now = Date.now();
 
-scanLock = true;
+          if (
+            scanLock ||
+            now - lastScanTime < 5000
+          ) {
+            return;
+          }
 
-codeReader.reset();
-```
+          scanLock = true;
 
+          lastScanTime = now;
 
           const text =
           result.getText().trim();
@@ -178,18 +186,14 @@ codeReader.reset();
           msg.innerHTML =
           "Attendance Saved";
 
-          ```javascript id="m2q8vc"
-setTimeout(async () => {
+          setTimeout(() => {
 
-  scanLock = false;
+            scanLock = false;
 
-  msg.innerHTML =
-  "Scanning QR code...";
+            msg.innerHTML =
+            "Ready";
 
-  startScanner();
-
-},5000);
-```
+          },5000);
 
         }
 
@@ -211,6 +215,7 @@ setTimeout(async () => {
 }
 
 </script>
+```
 
 </body>
 
