@@ -254,9 +254,7 @@ let present = 0;
 let late = 0;
 let absent = 0;
 
-
-if(students.length === 0)
-
+if(students.length === 0){
 
 tbody.innerHTML =
 
@@ -270,21 +268,61 @@ document.getElementById(
 "lateCount"
 ).innerText = 0;
 
+document.getElementById(
+"absentCount"
+).innerText = totalStudents;
+
+return;
+
+}
+
+students.forEach(student => {
+
+const row =
+document.createElement("tr");
+
+row.innerHTML = `
+
+<td>${student.adm}</td>
+
+<td>${student.name}</td>
+
+<td>${student.status}</td>
+
+`;
+
+tbody.appendChild(row);
+
+if(student.status === "PRESENT"){
+
+present++;
+
+}
+
+else if(student.status === "LATE"){
+
+late++;
+
+}
+
+});
+
 absent =
 totalStudents - (present + late);
 
 if(absent < 0){
-absent = 0;
-}
-
-absent =
-totalStudents - (present + late);
-
-if(absent < 0){
 
 absent = 0;
 
 }
+
+document.getElementById(
+"presentCount"
+).innerText = present;
+
+document.getElementById(
+"lateCount"
+).innerText = late;
 
 document.getElementById(
 "absentCount"
