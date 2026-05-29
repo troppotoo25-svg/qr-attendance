@@ -277,115 +277,8 @@ return;
 
 }
 
-students.forEach(student => {
-
-const row =
-document.createElement("tr");
-
-row.innerHTML = `
-
-<td>${student.adm}</td>
-
-<td>${student.name}</td>
-
-<td>${student.status}</td>
-
-`;
-
-tbody.appendChild(row);
-
-if(student.status === "PRESENT"){
-
-present++;
-
-}
-
-else if(student.status === "LATE"){
-
-late++;
-
-}
-
-});
-
-absent =
-totalStudents - (present + late);
-
-if(absent < 0){
-
-absent = 0;
-
-}
-
-document.getElementById(
-"presentCount"
-).innerText = present;
-
-document.getElementById(
-"lateCount"
-).innerText = late;
-
-document.getElementById(
-"absentCount"
-).innerText = absent;
 
 
-return;
-
-}
-
-students.forEach(student => {
-
-
-
-const row =
-document.createElement("tr");
-
-row.innerHTML = `
-
-<td>${student.adm}</td>
-
-<td>${student.name}</td>
-
-<td>${student.status}</td>
-
-`;
-
-tbody.appendChild(row);
-
-if(student.status === "PRESENT"){
-
-present++;
-
-}
-
-else if(student.status === "LATE"){
-
-late++;
-
-}
-
-else{
-
-absent++;
-
-}
-
-});
-
-document.getElementById(
-"presentCount"
-).innerText = present;
-
-document.getElementById(
-"lateCount"
-).innerText = late;
-
-document.getElementById(
-"absentCount"
-).innerText = absent;
-
-}
 
 catch(error){
 
@@ -398,6 +291,39 @@ console.log(error);
 }
 
 }
+function searchStudent(){
+
+const input =
+document.getElementById(
+"searchInput"
+).value.toUpperCase();
+
+const rows =
+document.querySelectorAll(
+"#studentBody tr"
+);
+
+rows.forEach(row => {
+
+const text =
+row.innerText.toUpperCase();
+
+if(text.includes(input)){
+
+row.style.display = "";
+
+}
+
+else{
+
+row.style.display = "none";
+
+}
+
+});
+
+}
+
 </script>
 
 </body>
