@@ -242,16 +242,21 @@ await fetch(
 const data =
 await response.json();
 
+const students =
+data.students;
+
+const totalStudents =
+data.totalStudents;
+
 tbody.innerHTML = "";
 
 let present = 0;
 let late = 0;
 let absent = 0;
 
-const totalStudents = 40;
 
+if(students.length === 0)
 
-if(data.length === 0){
 
 tbody.innerHTML =
 
@@ -272,15 +277,27 @@ if(absent < 0){
 absent = 0;
 }
 
+absent =
+totalStudents - (present + late);
+
+if(absent < 0){
+
+absent = 0;
+
+}
+
 document.getElementById(
 "absentCount"
 ).innerText = absent;
+
 
 return;
 
 }
 
-data.forEach(student => {
+students.forEach(student => {
+
+
 
 const row =
 document.createElement("tr");
