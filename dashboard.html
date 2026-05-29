@@ -203,10 +203,18 @@ document.getElementById(
 "classSelect"
 ).value;
 
-const date =
+```javascript id="fixdate001"
+const rawDate =
 document.getElementById(
 "dateInput"
 ).value;
+
+const date =
+new Date(rawDate)
+.toISOString()
+.split("T")[0];
+```
+
 
 const tbody =
 document.getElementById(
