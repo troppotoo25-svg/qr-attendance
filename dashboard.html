@@ -195,7 +195,6 @@ PRINT PRESENT LIST
 </div>
 
 <script>
-
 async function loadStudents(){
 
 const className =
@@ -203,7 +202,6 @@ document.getElementById(
 "classSelect"
 ).value;
 
-```javascript id="fixdate001"
 const rawDate =
 document.getElementById(
 "dateInput"
@@ -213,8 +211,6 @@ const date =
 new Date(rawDate)
 .toISOString()
 .split("T")[0];
-```
-
 
 const tbody =
 document.getElementById(
@@ -223,6 +219,8 @@ document.getElementById(
 
 tbody.innerHTML =
 "<tr><td colspan='3'>Loading...</td></tr>";
+
+try{
 
 const response =
 await fetch(
@@ -239,8 +237,6 @@ await fetch(
 
 const data =
 await response.json();
-```
-
 
 tbody.innerHTML = "";
 
@@ -288,15 +284,21 @@ row.innerHTML = `
 tbody.appendChild(row);
 
 if(student.status === "PRESENT"){
+
 present++;
+
 }
 
 else if(student.status === "LATE"){
+
 late++;
+
 }
 
 else{
+
 absent++;
+
 }
 
 });
@@ -315,9 +317,19 @@ document.getElementById(
 
 }
 
+catch(error){
+
+tbody.innerHTML =
+
+"<tr><td colspan='3'>ERROR LOADING DATA</td></tr>";
+
+console.log(error);
+
+}
+
+}
 </script>
 
 </body>
 
 </html>
-```
