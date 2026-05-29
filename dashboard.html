@@ -224,11 +224,11 @@ document.getElementById(
 tbody.innerHTML =
 "<tr><td colspan='3'>Loading...</td></tr>";
 
+```javascript id="workingfetch001"
 const response =
 await fetch(
 
-https://script.google.com/macros/s/AKfycbwSGyUViXKn7RdjT8LNDBQZZ-ef6BGM8RcBgFcrB0LTRRQAQX1BDPWYZQ5KQ8mV7LGw/exec
-="
+"https://script.google.com/macros/s/AKfycbwSGyUViXKn7RdjT8LNDBQZZ-ef6BGM8RcBgFcrB0LTRRQAQX1BDPWYZQ5KQ8mV7LGw/exec?class="
 
 + encodeURIComponent(className)
 
@@ -240,6 +240,8 @@ https://script.google.com/macros/s/AKfycbwSGyUViXKn7RdjT8LNDBQZZ-ef6BGM8RcBgFcrB
 
 const data =
 await response.json();
+```
+
 
 tbody.innerHTML = "";
 
