@@ -1,4 +1,4 @@
-
+```html
 <!DOCTYPE html>
 <html>
 
@@ -25,7 +25,7 @@ text-align:center;
 background:white;
 padding:20px;
 border-radius:10px;
-max-width:900px;
+max-width:1000px;
 margin:auto;
 box-shadow:0 2px 10px rgba(0,0,0,0.1);
 }
@@ -69,6 +69,28 @@ background:#0b57d0;
 color:white;
 }
 
+.summaryBox{
+
+flex:1;
+padding:20px;
+border-radius:10px;
+color:white;
+text-align:center;
+
+}
+
+.presentBox{
+background:green;
+}
+
+.lateBox{
+background:orange;
+}
+
+.absentBox{
+background:red;
+}
+
 </style>
 
 </head>
@@ -81,17 +103,21 @@ color:white;
 
 <label>Select Class:</label>
 
-```html
 <select id="classSelect">
 
 <option value="Grade 7">Grade 7</option>
 <option value="Grade 8">Grade 8</option>
-<option value="form3">form3</option>
-<option value="form 4">form 4</option>
+<option value="Grade 10">Grade 10</option>
+<option value="FORM 3 G">FORM 3 G</option>
+<option value="FORM 3 P">FORM 3 P</option>
+<option value="FORM 3 J">FORM 3 J</option>
+<option value="FORM 3 L">FORM 3 L</option>
+<option value="FORM 4 G">FORM 4 G</option>
+<option value="FORM J">FORM J</option>
+<option value="FORM P">FORM P</option>
+<option value="FORM4 L">FORM4 L</option>
 
 </select>
-```
-
 
 <label>Select Date:</label>
 
@@ -101,6 +127,49 @@ id="dateInput">
 
 <button onclick="loadStudents()">
 LOAD STUDENTS
+</button>
+
+<div style="
+display:flex;
+gap:20px;
+flex-wrap:wrap;
+margin-top:20px;
+">
+
+<div class="summaryBox presentBox">
+
+<h3>PRESENT</h3>
+
+<h1 id="presentCount">
+0
+</h1>
+
+</div>
+
+<div class="summaryBox lateBox">
+
+<h3>LATE</h3>
+
+<h1 id="lateCount">
+0
+</h1>
+
+</div>
+
+<div class="summaryBox absentBox">
+
+<h3>ABSENT</h3>
+
+<h1 id="absentCount">
+0
+</h1>
+
+</div>
+
+</div>
+
+<button onclick="window.print()">
+PRINT PRESENT LIST
 </button>
 
 <table>
@@ -165,11 +234,27 @@ await response.json();
 
 tbody.innerHTML = "";
 
+let present = 0;
+let late = 0;
+let absent = 0;
+
 if(data.length === 0){
 
 tbody.innerHTML =
 
 "<tr><td colspan='3'>No attendance found</td></tr>";
+
+document.getElementById(
+"presentCount"
+).innerText = 0;
+
+document.getElementById(
+"lateCount"
+).innerText = 0;
+
+document.getElementById(
+"absentCount"
+).innerText = 0;
 
 return;
 
@@ -192,7 +277,31 @@ row.innerHTML = `
 
 tbody.appendChild(row);
 
+if(student.status === "PRESENT"){
+present++;
+}
+
+else if(student.status === "LATE"){
+late++;
+}
+
+else{
+absent++;
+}
+
 });
+
+document.getElementById(
+"presentCount"
+).innerText = present;
+
+document.getElementById(
+"lateCount"
+).innerText = late;
+
+document.getElementById(
+"absentCount"
+).innerText = absent;
 
 }
 
@@ -201,3 +310,4 @@ tbody.appendChild(row);
 </body>
 
 </html>
+```
