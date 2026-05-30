@@ -191,89 +191,30 @@ document.getElementById("classSelect").value;
 const date =
 document.getElementById("dateInput").value;
 
-const response =
-await fetch(
-
+const url =
 "https://script.google.com/macros/s/AKfycbxd-0ZZSe4RKX0h2V9L7vKVnxKKc2IVNgeDdeJO5dS0tpER_o2ChCeUTY6RsbwCT1nR/exec?class="
-
 + encodeURIComponent(className)
-
 + "&date="
++ encodeURIComponent(date);
 
-+ encodeURIComponent(date)
+console.log("URL:", url);
 
-);
+try {
 
-const data =
-await response.json();
+const response = await fetch(url);
 
-document.getElementById("totalCount")
-.innerText =
-data.totalStudents;
+console.log("STATUS:", response.status);
 
-document.getElementById("presentCount")
-.innerText =
-data.presentCount;
+const text = await response.text();
 
-document.getElementById("lateCount")
-.innerText =
-data.lateCount;
-
-document.getElementById("absentCount")
-.innerText =
-data.absentCount;
-
-const presentBody =
-document.getElementById("presentBody");
-
-const lateBody =
-document.getElementById("lateBody");
-
-const absentBody =
-document.getElementById("absentBody");
-
-presentBody.innerHTML="";
-lateBody.innerHTML="";
-absentBody.innerHTML="";
-
-data.presentStudents.forEach(student=>{
-
-presentBody.innerHTML +=
-
-`<tr>
-<td>${student.adm}</td>
-<td>${student.name}</td>
-<td>${student.status}</td>
-</tr>`;
-
-});
-
-data.lateStudents.forEach(student=>{
-
-lateBody.innerHTML +=
-
-`<tr>
-<td>${student.adm}</td>
-<td>${student.name}</td>
-<td>${student.status}</td>
-</tr>`;
-
-});
-
-data.absentStudents.forEach(student=>{
-
-absentBody.innerHTML +=
-
-`<tr>
-<td>${student.adm}</td>
-<td>${student.name}</td>
-<td>${student.status}</td>
-</tr>`;
-
-});
+console.log("DATA:", text);
 
 }
+catch(error){
 
+console.log("ERROR:", error);
+
+}
 </script>
 
 </body>
