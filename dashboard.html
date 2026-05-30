@@ -75,11 +75,9 @@ margin-top:20px;
 
 <div class="controls">
 
-<input
-type="text"
-id="classSelect"
-placeholder="FORM 3 G">
-
+<select id="classSelect">
+<option value="">Loading Classes...</option>
+</select>
 <input
 type="date"
 id="dateInput">
@@ -172,92 +170,36 @@ PRINT REPORT
 <script>
 
 
-async function loadStudents(){
-
-try{
-
-const className =
-document.getElementById("classSelect").value.trim();
-
-const date =
-document.getElementById("dateInput").value;
+async function loadClasses(){
 
 const url =
-"https://script.google.com/macros/s/AKfycbwitKbU4JmTqtznrU8oqNiiPfD4XH74_MtroGFsLpFzd0w8PnN9ycW5GIvOfVvI-iAm/exec?class="
-+ encodeURIComponent(className)
-+ "&date="
-+ encodeURIComponent(date);
+"https://script.google.com/macros/s/AKfycbzB4Q6nww3tG0jnI4ketvDCU8S5IJGDl0iSw5trm2arwiSkf4MCm3WFoxtq7jaVORlJ/exec?action=classes";
 
 const response = await fetch(url);
 
-const data = await response.json();
+const classes = await response.json();
 
-document.getElementById("totalCount").textContent =
-data.totalStudents;
+const select =
+document.getElementById("classSelect");
 
-document.getElementById("presentCount").textContent =
-data.presentCount;
+select.innerHTML = "";
 
-document.getElementById("lateCount").textContent =
-data.lateCount;
+classes.forEach(className=>{
 
-document.getElementById("absentCount").textContent =
-data.absentCount;
-
-document.getElementById("presentBody").innerHTML = "";
-document.getElementById("lateBody").innerHTML = "";
-document.getElementById("absentBody").innerHTML = "";
-
-data.presentStudents.forEach(student => {
-
-document.getElementById("presentBody").innerHTML += `
-<tr>
-<td>${student.adm}</td>
-<td>${student.name}</td>
-<td>${student.status}</td>
-</tr>
-`;
+select.innerHTML +=
+`<option value="${className}">
+${className}
+</option>`;
 
 });
-
-data.lateStudents.forEach(student => {
-
-document.getElementById("lateBody").innerHTML += `
-<tr>
-<td>${student.adm}</td>
-<td>${student.name}</td>
-<td>${student.status}</td>
-</tr>
-`;
-
-});
-
-data.absentStudents.forEach(student => {
-
-document.getElementById("absentBody").innerHTML += `
-<tr>
-<td>${student.adm}</td>
-<td>${student.name}</td>
-<td>${student.status}</td>
-</tr>
-`;
-
-});
-
-}catch(error){
-
-alert(error);
-
-}
 
 }
 window.onload = function(){
 
-document.getElementById("classSelect").value =
-"FORM 3 G";
-
 document.getElementById("dateInput").value =
-"2026-05-29";
+new Date().toISOString().split("T")[0];
+
+loadClasses();
 
 };
 
