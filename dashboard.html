@@ -3,182 +3,148 @@
 
 async function loadStudents(){
 
-const className =
-document.getElementById(
-"classSelect"
-).value;
+  const className =
+    document.getElementById("classSelect").value;
 
-const date =
-document.getElementById(
-"dateInput"
-).value;
+  const date =
+    document.getElementById("dateInput").value;
 
-const tbody =
-document.getElementById(
-"studentBody"
-);
+  const tbody =
+    document.getElementById("studentBody");
 
-tbody.innerHTML =
-"<tr><td colspan='3'>Loading...</td></tr>";
+  tbody.innerHTML =
+    "<tr><td colspan='3'>Loading...</td></tr>";
 
-try{
+  try{
 
-const response =
-await fetch(
+    const response =
+      await fetch(
 
-"https://script.google.com/macros/s/AKfycbwvGLpWOEUrCU5VVvr12dj9CfaiE8ZL6sKDfEl_igJ4Tm1EQAKLubpfQFKF6ID9rXKK/exec?class="
+      "https://script.google.com/macros/s/AKfycbwvGLpWOEUrCU5VVvr12dj9CfaiE8ZL6sKDfEl_igJ4Tm1EQAKLubpfQFKF6ID9rXKK/exec?class="
 
-+ encodeURIComponent(className)
+      + encodeURIComponent(className)
 
-+ "&date="
+      + "&date="
 
-+ encodeURIComponent(date)
+      + encodeURIComponent(date)
 
-);
+    );
 
-const data =
-await response.json();
+    const data =
+      await response.json();
 
-let students = [];
-let totalStudents = 0;
+    let students = [];
+    let totalStudents = 0;
 
-if(Array.isArray(data)){
+    if(Array.isArray(data)){
 
-students = data;
-totalStudents = data.length;
+      students = data;
+      totalStudents = data.length;
 
-}
+    }else{
 
-else{
+      students = data.students || [];
+      totalStudents = data.totalStudents || 0;
 
-students = data.students || [];
-totalStudents = data.totalStudents || 0;
+    }
 
-}
+    tbody.innerHTML = "";
 
-tbody.innerHTML = "";
+    let present = 0;
+    let late = 0;
 
-let present = 0;
-let late = 0;
+    if(students.length === 0){
 
-if(students.length === 0){
+      tbody.innerHTML =
+      "<tr><td colspan='3'>No attendance found</td></tr>";
 
-tbody.innerHTML =
+      document.getElementById("presentCount").innerText = 0;
+      document.getElementById("lateCount").innerText = 0;
+      document.getElementById("absentCount").innerText = totalStudents;
 
-"<tr><td colspan='3'>No attendance found</td></tr>";
+      return;
 
-document.getElementById(
-"presentCount"
-).innerText = 0;
+    }
 
-document.getElementById(
-"lateCount"
-).innerText = 0;
+    students.forEach(student => {
 
-document.getElementById(
-"absentCount"
-).innerText = totalStudents;
+      const row =
+        document.createElement("tr");
 
-return;
+      row.innerHTML =
 
-}
+      "<td>" + student.adm + "</td>" +
 
-students.forEach(student => {
+      "<td>" + student.name + "</td>" +
 
-const row =
-document.createElement("tr");
+      "<td>" + student.status + "</td>";
 
-row.innerHTML = `
+      tbody.appendChild(row);
 
-<td>${student.adm}</td>
+      if(student.status === "PRESENT"){
 
-<td>${student.name}</td>
+        present++;
 
-<td>${student.status}</td>
+      }else if(student.status === "LATE"){
 
-`;
+        late++;
 
-tbody.appendChild(row);
+      }
 
-if(student.status === "PRESENT"){
+    });
 
-present++;
+    let absent =
+      totalStudents - (present + late);
 
-}
+    if(absent < 0){
 
-else if(student.status === "LATE"){
+      absent = 0;
 
-late++;
+    }
 
-}
+    document.getElementById("presentCount").innerText = present;
+    document.getElementById("lateCount").innerText = late;
+    document.getElementById("absentCount").innerText = absent;
 
-});
+  }
 
-let absent =
-totalStudents - (present + late);
+  catch(error){
 
-if(absent < 0){
+    console.log(error);
 
-absent = 0;
+    tbody.innerHTML =
+    "<tr><td colspan='3'>ERROR LOADING DATA</td></tr>";
 
-}
-
-document.getElementById(
-"presentCount"
-).innerText = present;
-
-document.getElementById(
-"lateCount"
-).innerText = late;
-
-document.getElementById(
-"absentCount"
-).innerText = absent;
-
-}
-
-catch(error){
-
-tbody.innerHTML =
-
-"<tr><td colspan='3'>ERROR LOADING DATA</td></tr>";
-
-console.log(error);
-
-}
+  }
 
 }
 
 function searchStudent(){
 
-const input =
-document.getElementById(
-"searchInput"
-).value.toUpperCase();
+  const input =
+    document.getElementById("searchInput")
+    .value
+    .toUpperCase();
 
-const rows =
-document.querySelectorAll(
-"#studentBody tr"
-);
+  const rows =
+    document.querySelectorAll("#studentBody tr");
 
-rows.forEach(row => {
+  rows.forEach(row => {
 
-const text =
-row.innerText.toUpperCase();
+    const text =
+      row.innerText.toUpperCase();
 
-if(text.includes(input)){
+    if(text.includes(input)){
 
-row.style.display = "";
+      row.style.display = "";
 
-}
+    }else{
 
-else{
+      row.style.display = "none";
 
-row.style.display = "none";
+    }
 
-}
-
-});
+  });
 
 }
 
