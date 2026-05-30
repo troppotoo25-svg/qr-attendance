@@ -1,114 +1,265 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<title>Attendance Dashboard</title>
+
+<style>
+
+body{
+font-family:Arial,sans-serif;
+padding:20px;
+background:#f4f4f4;
+}
+
+h1{
+text-align:center;
+}
+
+.controls{
+margin-bottom:20px;
+}
+
+input,button{
+padding:10px;
+margin:5px;
+}
+
+.cards{
+display:flex;
+gap:15px;
+flex-wrap:wrap;
+margin-bottom:20px;
+}
+
+.card{
+background:white;
+padding:15px;
+border-radius:10px;
+box-shadow:0 2px 5px rgba(0,0,0,.2);
+min-width:150px;
+text-align:center;
+}
+
+table{
+width:100%;
+border-collapse:collapse;
+background:white;
+margin-top:10px;
+}
+
+th,td{
+border:1px solid #ddd;
+padding:8px;
+}
+
+th{
+background:#0b57d0;
+color:white;
+}
+
+.section{
+margin-top:20px;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<h1>Attendance Dashboard</h1>
+
+<div class="controls">
+
+<input
+type="text"
+id="classSelect"
+placeholder="FORM 3 G">
+
+<input
+type="date"
+id="dateInput">
+
+<button onclick="loadStudents()">
+LOAD
+</button>
+
+<button onclick="window.print()">
+PRINT REPORT
+</button>
+
+</div>
+
+<div class="cards">
+
+<div class="card">
+<h3>Total</h3>
+<h2 id="totalCount">0</h2>
+</div>
+
+<div class="card">
+<h3>Present</h3>
+<h2 id="presentCount">0</h2>
+</div>
+
+<div class="card">
+<h3>Late</h3>
+<h2 id="lateCount">0</h2>
+</div>
+
+<div class="card">
+<h3>Absent</h3>
+<h2 id="absentCount">0</h2>
+</div>
+
+</div>
+
+<div class="section">
+
+<h2>Present Students</h2>
+
+<table>
+<thead>
+<tr>
+<th>ADM</th>
+<th>Name</th>
+<th>Status</th>
+</tr>
+</thead>
+<tbody id="presentBody"></tbody>
+</table>
+
+</div>
+
+<div class="section">
+
+<h2>Late Students</h2>
+
+<table>
+<thead>
+<tr>
+<th>ADM</th>
+<th>Name</th>
+<th>Status</th>
+</tr>
+</thead>
+<tbody id="lateBody"></tbody>
+</table>
+
+</div>
+
+<div class="section">
+
+<h2>Absent Students</h2>
+
+<table>
+<thead>
+<tr>
+<th>ADM</th>
+<th>Name</th>
+<th>Status</th>
+</tr>
+</thead>
+<tbody id="absentBody"></tbody>
+</table>
+
+</div>
+
 <script>
 
 async function loadStudents() {
 
-  const className =
-    document.getElementById("classSelect").value.trim();
+const className =
+document.getElementById("classSelect").value.trim();
 
-  const date =
-    document.getElementById("dateInput").value;
+const date =
+document.getElementById("dateInput").value;
 
-  if (!className) {
-    alert("Enter Class Name");
-    return;
-  }
+const url =
+"https://script.google.com/macros/s/AKfycbxd-0ZZSe4RKX0h2V9L7vKVnxKKc2IVNgeDdeJO5dS0tpER_o2ChCeUTY6RsbwCT1nR/exec?class="
++ encodeURIComponent(className)
++ "&date="
++ encodeURIComponent(date);
 
-  if (!date) {
-    alert("Select Date");
-    return;
-  }
+const response =
+await fetch(url);
 
-  const url =
-    "https://script.google.com/macros/s/AKfycbxd-0ZZSe4RKX0h2V9L7vKVnxKKc2IVNgeDdeJO5dS0tpER_o2ChCeUTY6RsbwCT1nR/exec?class="
-    + encodeURIComponent(className)
-    + "&date="
-    + encodeURIComponent(date);
+const data =
+await response.json();
 
-  try {
+document.getElementById("totalCount").innerText =
+data.totalStudents;
 
-    const response =
-      await fetch(url);
+document.getElementById("presentCount").innerText =
+data.presentCount;
 
-    const data =
-      await response.json();
+document.getElementById("lateCount").innerText =
+data.lateCount;
 
-    document.getElementById("totalCount").innerText =
-      data.totalStudents || 0;
+document.getElementById("absentCount").innerText =
+data.absentCount;
 
-    document.getElementById("presentCount").innerText =
-      data.presentCount || 0;
+const presentBody =
+document.getElementById("presentBody");
 
-    document.getElementById("lateCount").innerText =
-      data.lateCount || 0;
+const lateBody =
+document.getElementById("lateBody");
 
-    document.getElementById("absentCount").innerText =
-      data.absentCount || 0;
+const absentBody =
+document.getElementById("absentBody");
 
-    const presentBody =
-      document.getElementById("presentBody");
+presentBody.innerHTML = "";
+lateBody.innerHTML = "";
+absentBody.innerHTML = "";
 
-    const lateBody =
-      document.getElementById("lateBody");
+data.presentStudents.forEach(student => {
 
-    const absentBody =
-      document.getElementById("absentBody");
+presentBody.innerHTML += `
+<tr>
+<td>${student.adm}</td>
+<td>${student.name}</td>
+<td>${student.status}</td>
+</tr>`;
 
-    presentBody.innerHTML = "";
-    lateBody.innerHTML = "";
-    absentBody.innerHTML = "";
+});
 
-    (data.presentStudents || []).forEach(student => {
+data.lateStudents.forEach(student => {
 
-      presentBody.innerHTML += `
-      <tr>
-        <td>${student.adm}</td>
-        <td>${student.name}</td>
-        <td>${student.status}</td>
-      </tr>`;
+lateBody.innerHTML += `
+<tr>
+<td>${student.adm}</td>
+<td>${student.name}</td>
+<td>${student.status}</td>
+</tr>`;
 
-    });
+});
 
-    (data.lateStudents || []).forEach(student => {
+data.absentStudents.forEach(student => {
 
-      lateBody.innerHTML += `
-      <tr>
-        <td>${student.adm}</td>
-        <td>${student.name}</td>
-        <td>${student.status}</td>
-      </tr>`;
+absentBody.innerHTML += `
+<tr>
+<td>${student.adm}</td>
+<td>${student.name}</td>
+<td>${student.status}</td>
+</tr>`;
 
-    });
-
-    (data.absentStudents || []).forEach(student => {
-
-      absentBody.innerHTML += `
-      <tr>
-        <td>${student.adm}</td>
-        <td>${student.name}</td>
-        <td>${student.status}</td>
-      </tr>`;
-
-    });
-
-  }
-  catch (error) {
-
-    console.error(error);
-
-    alert(
-      "Error Loading Data\n\n" +
-      error
-    );
-
-  }
+});
 
 }
 
-window.onload = function () {
+window.onload = function(){
 
-  document.getElementById("dateInput").value =
-    new Date().toISOString().split("T")[0];
+document.getElementById("dateInput").value =
+new Date().toISOString().split("T")[0];
 
 };
 
 </script>
+
+</body>
+</html>
+
