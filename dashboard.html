@@ -12,20 +12,37 @@
 body{
 font-family:Arial,sans-serif;
 padding:20px;
-background:#f4f4f4;
+background:#f4f6f9;
 }
 
 h1{
 text-align:center;
+color:#1a237e;
+margin-bottom:20px;
 }
 
 .controls{
 margin-bottom:20px;
+text-align:center;
 }
 
-input,button{
+input,select,button{
 padding:10px;
 margin:5px;
+border-radius:6px;
+border:1px solid #ccc;
+}
+
+button{
+background:#1565c0;
+color:white;
+border:none;
+cursor:pointer;
+font-weight:bold;
+}
+
+button:hover{
+background:#0d47a1;
 }
 
 .cards{
@@ -36,12 +53,29 @@ margin-bottom:20px;
 }
 
 .card{
-background:white;
 padding:15px;
-border-radius:10px;
-box-shadow:0 2px 5px rgba(0,0,0,.2);
-min-width:150px;
+border-radius:12px;
+color:white;
+min-width:180px;
 text-align:center;
+font-weight:bold;
+box-shadow:0 3px 8px rgba(0,0,0,.2);
+}
+
+.total-card{
+background:#1565c0;
+}
+
+.present-card{
+background:#2e7d32;
+}
+
+.late-card{
+background:#ef6c00;
+}
+
+.absent-card{
+background:#c62828;
 }
 
 table{
@@ -49,22 +83,53 @@ width:100%;
 border-collapse:collapse;
 background:white;
 margin-top:10px;
+border-radius:10px;
+overflow:hidden;
+box-shadow:0 2px 6px rgba(0,0,0,.15);
 }
 
 th,td{
 border:1px solid #ddd;
 padding:8px;
+text-align:left;
 }
 
-th{
-background:#0b57d0;
+.present-table th{
+background:#2e7d32;
+color:white;
+}
+
+.late-table th{
+background:#ef6c00;
+color:white;
+}
+
+.absent-table th{
+background:#c62828;
 color:white;
 }
 
 .section{
-margin-top:20px;
+margin-top:25px;
 }
 
+h2{
+padding:10px;
+border-radius:6px;
+color:white;
+}
+
+.present-title{
+background:#2e7d32;
+}
+
+.late-title{
+background:#ef6c00;
+}
+
+.absent-title{
+background:#c62828;
+}
 </style>
 
 </head>
@@ -94,22 +159,22 @@ PRINT REPORT
 
 <div class="cards">
 
-<div class="card">
+<div class="card total-card">
 <h3>Total</h3>
 <h2 id="totalCount">0</h2>
 </div>
 
-<div class="card">
+<div class="card present-card">
 <h3>Present</h3>
 <h2 id="presentCount">0</h2>
 </div>
 
-<div class="card">
+<div class="card late-card">
 <h3>Late</h3>
 <h2 id="lateCount">0</h2>
 </div>
 
-<div class="card">
+<div class="card absent-card">
 <h3>Absent</h3>
 <h2 id="absentCount">0</h2>
 </div>
@@ -118,9 +183,9 @@ PRINT REPORT
 
 <div class="section">
 
-<h2>Present Students</h2>
+<h2 class="present-title">Present Students</h2>
 
-<table>
+<table class="present-table">
 <thead>
 <tr>
 <th>ADM</th>
