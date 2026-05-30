@@ -1,6 +1,6 @@
 <script>
 
-async function loadStudents(){
+async function loadStudents() {
 
 const className =
 document.getElementById("classSelect").value.trim();
@@ -8,11 +8,23 @@ document.getElementById("classSelect").value.trim();
 const date =
 document.getElementById("dateInput").value;
 
+if(!className){
+alert("Enter Class Name");
+return;
+}
+
+if(!date){
+alert("Select Date");
+return;
+}
+
 const url =
 "https://script.google.com/macros/s/AKfycbxd-0ZZSe4RKX0h2V9L7vKVnxKKc2IVNgeDdeJO5dS0tpER_o2ChCeUTY6RsbwCT1nR/exec?class="
 + encodeURIComponent(className)
 + "&date="
 + encodeURIComponent(date);
+
+console.log(url);
 
 try {
 
@@ -22,17 +34,19 @@ await fetch(url);
 const data =
 await response.json();
 
+console.log(data);
+
 document.getElementById("totalCount").innerText =
-data.totalStudents;
+data.totalStudents || 0;
 
 document.getElementById("presentCount").innerText =
-data.presentCount;
+data.presentCount || 0;
 
 document.getElementById("lateCount").innerText =
-data.lateCount;
+data.lateCount || 0;
 
 document.getElementById("absentCount").innerText =
-data.absentCount;
+data.absentCount || 0;
 
 const presentBody =
 document.getElementById("presentBody");
@@ -47,7 +61,7 @@ presentBody.innerHTML = "";
 lateBody.innerHTML = "";
 absentBody.innerHTML = "";
 
-data.presentStudents.forEach(student => {
+(data.presentStudents || []).forEach(student => {
 
 presentBody.innerHTML += `
 <tr>
@@ -59,7 +73,7 @@ presentBody.innerHTML += `
 
 });
 
-data.lateStudents.forEach(student => {
+(data.lateStudents || []).forEach(student => {
 
 lateBody.innerHTML += `
 <tr>
@@ -71,7 +85,7 @@ lateBody.innerHTML += `
 
 });
 
-data.absentStudents.forEach(student => {
+(data.absentStudents || []).forEach(student => {
 
 absentBody.innerHTML += `
 <tr>
@@ -86,15 +100,22 @@ absentBody.innerHTML += `
 }
 catch(error){
 
-alert("Error Loading Data");
+console.error(error);
 
-console.log(error);
+alert(
+"Error Loading Data\n\n" +
+error
+);
 
 }
 
 }
+
+window.onload = function(){
 
 document.getElementById("dateInput").value =
 new Date().toISOString().split("T")[0];
+
+};
 
 </script>
