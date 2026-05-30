@@ -1,192 +1,9 @@
-<!DOCTYPE html>
-<html>
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-
-<title>Attendance Dashboard</title>
-
-<style>
-
-body{
-font-family:Arial,sans-serif;
-background:#f4f4f4;
-padding:20px;
-}
-
-h1{
-text-align:center;
-}
-
-.controls{
-display:flex;
-gap:10px;
-flex-wrap:wrap;
-margin-bottom:20px;
-}
-
-input,select,button{
-padding:10px;
-}
-
-.cards{
-display:flex;
-gap:15px;
-flex-wrap:wrap;
-margin-bottom:20px;
-}
-
-.card{
-background:white;
-padding:15px;
-border-radius:10px;
-box-shadow:0 2px 5px rgba(0,0,0,.2);
-min-width:150px;
-text-align:center;
-}
-
-table{
-width:100%;
-border-collapse:collapse;
-background:white;
-margin-top:10px;
-}
-
-th,td{
-border:1px solid #ddd;
-padding:8px;
-}
-
-th{
-background:#0b57d0;
-color:white;
-}
-
-.section{
-margin-top:30px;
-}
-
-</style>
-</head>
-
-<body>
-
-<h1>Attendance Dashboard</h1>
-
-<div class="controls">
-
-<input
-type="text"
-id="classSelect"
-placeholder="FORM 3 G">
-
-<input
-type="date"
-id="dateInput">
-
-<button onclick="loadStudents()">
-LOAD
-</button>
-
-<button onclick="window.print()">
-PRINT REPORT
-</button>
-
-</div>
-
-<div class="cards">
-
-<div class="card">
-<h3>Total</h3>
-<h2 id="totalCount">0</h2>
-</div>
-
-<div class="card">
-<h3>Present</h3>
-<h2 id="presentCount">0</h2>
-</div>
-
-<div class="card">
-<h3>Late</h3>
-<h2 id="lateCount">0</h2>
-</div>
-
-<div class="card">
-<h3>Absent</h3>
-<h2 id="absentCount">0</h2>
-</div>
-
-</div>
-
-<div class="section">
-
-<h2>Present Students</h2>
-
-<table>
-
-<thead>
-<tr>
-<th>ADM</th>
-<th>Name</th>
-<th>Status</th>
-</tr>
-</thead>
-
-<tbody id="presentBody">
-</tbody>
-
-</table>
-
-</div>
-
-<div class="section">
-
-<h2>Late Students</h2>
-
-<table>
-
-<thead>
-<tr>
-<th>ADM</th>
-<th>Name</th>
-<th>Status</th>
-</tr>
-</thead>
-
-<tbody id="lateBody">
-</tbody>
-
-</table>
-
-</div>
-
-<div class="section">
-
-<h2>Absent Students</h2>
-
-<table>
-
-<thead>
-<tr>
-<th>ADM</th>
-<th>Name</th>
-<th>Status</th>
-</tr>
-</thead>
-
-<tbody id="absentBody">
-</tbody>
-
-</table>
-
-</div>
-
 <script>
 
 async function loadStudents(){
 
 const className =
-document.getElementById("classSelect").value;
+document.getElementById("classSelect").value.trim();
 
 const date =
 document.getElementById("dateInput").value;
@@ -197,25 +14,87 @@ const url =
 + "&date="
 + encodeURIComponent(date);
 
-console.log("URL:", url);
-
 try {
 
-const response = await fetch(url);
+const response =
+await fetch(url);
 
-console.log("STATUS:", response.status);
+const data =
+await response.json();
 
-const text = await response.text();
+document.getElementById("totalCount").innerText =
+data.totalStudents;
 
-console.log("DATA:", text);
+document.getElementById("presentCount").innerText =
+data.presentCount;
+
+document.getElementById("lateCount").innerText =
+data.lateCount;
+
+document.getElementById("absentCount").innerText =
+data.absentCount;
+
+const presentBody =
+document.getElementById("presentBody");
+
+const lateBody =
+document.getElementById("lateBody");
+
+const absentBody =
+document.getElementById("absentBody");
+
+presentBody.innerHTML = "";
+lateBody.innerHTML = "";
+absentBody.innerHTML = "";
+
+data.presentStudents.forEach(student => {
+
+presentBody.innerHTML += `
+<tr>
+<td>${student.adm}</td>
+<td>${student.name}</td>
+<td>${student.status}</td>
+</tr>
+`;
+
+});
+
+data.lateStudents.forEach(student => {
+
+lateBody.innerHTML += `
+<tr>
+<td>${student.adm}</td>
+<td>${student.name}</td>
+<td>${student.status}</td>
+</tr>
+`;
+
+});
+
+data.absentStudents.forEach(student => {
+
+absentBody.innerHTML += `
+<tr>
+<td>${student.adm}</td>
+<td>${student.name}</td>
+<td>${student.status}</td>
+</tr>
+`;
+
+});
 
 }
 catch(error){
 
-console.log("ERROR:", error);
+alert("Error Loading Data");
+
+console.log(error);
 
 }
-</script>
 
-</body>
-</html>
+}
+
+document.getElementById("dateInput").value =
+new Date().toISOString().split("T")[0];
+
+</script>
