@@ -87,7 +87,14 @@ id="dateInput">
 <button onclick="loadStudents()">
 LOAD
 </button>
+window.onload = function(){
 
+document.getElementById("dateInput").value =
+"2026-05-29";
+
+loadStudents();
+
+};
 <button onclick="window.print()">
 PRINT REPORT
 </button>
@@ -171,8 +178,7 @@ PRINT REPORT
 
 <script>
 
-async function loadStudents() {
-  alert("LOAD BUTTON CLICKED");
+async function loadStudents(){
 
 const className =
 document.getElementById("classSelect").value.trim();
@@ -181,39 +187,25 @@ const date =
 document.getElementById("dateInput").value;
 
 const url =
-"https://script.google.com/macros/s/AKfycbwsm259_reFTa6XyIJS2cyr4XWoqbh5xX2vjaE0-J5VyDScxiDvzj9C6-piTxIp7Jpx/exec"
+"https://script.google.com/macros/s/AKfycbwsm259_reFTa6XyIJS2cyr4XWoqbh5xX2vjaE0-J5VyDScxiDvzj9C6-piTxIp7Jpx/exec?class="
 + encodeURIComponent(className)
 + "&date="
 + encodeURIComponent(date);
 
-const response =
-await fetch(url);
+const response = await fetch(url);
 
-alert("STATUS = " + response.status);
+const data = await response.json();
 
-const text =
-await response.text();
-
-alert(text);
-
-const data = JSON.parse(text);
-
-alert(
-"Total: " + data.totalStudents +
-"\nPresent: " + data.presentCount +
-"\nAbsent: " + data.absentCount
-);
-
-document.getElementById("totalCount").innerText =
+document.getElementById("totalCount").textContent =
 data.totalStudents;
 
-document.getElementById("presentCount").innerText =
+document.getElementById("presentCount").textContent =
 data.presentCount;
 
-document.getElementById("lateCount").innerText =
+document.getElementById("lateCount").textContent =
 data.lateCount;
 
-document.getElementById("absentCount").innerText =
+document.getElementById("absentCount").textContent =
 data.absentCount;
 
 const presentBody =
@@ -236,7 +228,8 @@ presentBody.innerHTML += `
 <td>${student.adm}</td>
 <td>${student.name}</td>
 <td>${student.status}</td>
-</tr>`;
+</tr>
+`;
 
 });
 
@@ -247,7 +240,8 @@ lateBody.innerHTML += `
 <td>${student.adm}</td>
 <td>${student.name}</td>
 <td>${student.status}</td>
-</tr>`;
+</tr>
+`;
 
 });
 
@@ -258,7 +252,8 @@ absentBody.innerHTML += `
 <td>${student.adm}</td>
 <td>${student.name}</td>
 <td>${student.status}</td>
-</tr>`;
+</tr>
+`;
 
 });
 
