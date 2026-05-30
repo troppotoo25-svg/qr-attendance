@@ -200,15 +200,9 @@ const url =
 + "&date="
 + encodeURIComponent(date);
 
-alert(url);
-
 const response = await fetch(url);
 
-const text = await response.text();
-
-alert(text);
-
-const data = JSON.parse(text);
+const data = await response.json();
 
 document.getElementById("totalCount").textContent =
 data.totalStudents;
@@ -222,15 +216,53 @@ data.lateCount;
 document.getElementById("absentCount").textContent =
 data.absentCount;
 
+document.getElementById("presentBody").innerHTML = "";
+document.getElementById("lateBody").innerHTML = "";
+document.getElementById("absentBody").innerHTML = "";
+
+data.presentStudents.forEach(student => {
+
+document.getElementById("presentBody").innerHTML += `
+<tr>
+<td>${student.adm}</td>
+<td>${student.name}</td>
+<td>${student.status}</td>
+</tr>
+`;
+
+});
+
+data.lateStudents.forEach(student => {
+
+document.getElementById("lateBody").innerHTML += `
+<tr>
+<td>${student.adm}</td>
+<td>${student.name}</td>
+<td>${student.status}</td>
+</tr>
+`;
+
+});
+
+data.absentStudents.forEach(student => {
+
+document.getElementById("absentBody").innerHTML += `
+<tr>
+<td>${student.adm}</td>
+<td>${student.name}</td>
+<td>${student.status}</td>
+</tr>
+`;
+
+});
+
+}catch(error){
+
+alert(error);
+
 }
-catch(err){
-
-alert("ERROR: " + err);
 
 }
-
-}
-
 window.onload = function(){
 
 document.getElementById("classSelect").value =
