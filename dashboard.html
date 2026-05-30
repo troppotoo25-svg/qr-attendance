@@ -1,151 +1,280 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 
+<title>Attendance Dashboard</title>
+
+<style>
+
+body{
+font-family:Arial,sans-serif;
+background:#f4f4f4;
+padding:20px;
+}
+
+h1{
+text-align:center;
+}
+
+.controls{
+display:flex;
+gap:10px;
+flex-wrap:wrap;
+margin-bottom:20px;
+}
+
+input,select,button{
+padding:10px;
+}
+
+.cards{
+display:flex;
+gap:15px;
+flex-wrap:wrap;
+margin-bottom:20px;
+}
+
+.card{
+background:white;
+padding:15px;
+border-radius:10px;
+box-shadow:0 2px 5px rgba(0,0,0,.2);
+min-width:150px;
+text-align:center;
+}
+
+table{
+width:100%;
+border-collapse:collapse;
+background:white;
+margin-top:10px;
+}
+
+th,td{
+border:1px solid #ddd;
+padding:8px;
+}
+
+th{
+background:#0b57d0;
+color:white;
+}
+
+.section{
+margin-top:30px;
+}
+
+</style>
+</head>
+
+<body>
+
+<h1>Attendance Dashboard</h1>
+
+<div class="controls">
+
+<input
+type="text"
+id="classSelect"
+placeholder="FORM 3 G">
+
+<input
+type="date"
+id="dateInput">
+
+<button onclick="loadStudents()">
+LOAD
+</button>
+
+<button onclick="window.print()">
+PRINT REPORT
+</button>
+
+</div>
+
+<div class="cards">
+
+<div class="card">
+<h3>Total</h3>
+<h2 id="totalCount">0</h2>
+</div>
+
+<div class="card">
+<h3>Present</h3>
+<h2 id="presentCount">0</h2>
+</div>
+
+<div class="card">
+<h3>Late</h3>
+<h2 id="lateCount">0</h2>
+</div>
+
+<div class="card">
+<h3>Absent</h3>
+<h2 id="absentCount">0</h2>
+</div>
+
+</div>
+
+<div class="section">
+
+<h2>Present Students</h2>
+
+<table>
+
+<thead>
+<tr>
+<th>ADM</th>
+<th>Name</th>
+<th>Status</th>
+</tr>
+</thead>
+
+<tbody id="presentBody">
+</tbody>
+
+</table>
+
+</div>
+
+<div class="section">
+
+<h2>Late Students</h2>
+
+<table>
+
+<thead>
+<tr>
+<th>ADM</th>
+<th>Name</th>
+<th>Status</th>
+</tr>
+</thead>
+
+<tbody id="lateBody">
+</tbody>
+
+</table>
+
+</div>
+
+<div class="section">
+
+<h2>Absent Students</h2>
+
+<table>
+
+<thead>
+<tr>
+<th>ADM</th>
+<th>Name</th>
+<th>Status</th>
+</tr>
+</thead>
+
+<tbody id="absentBody">
+</tbody>
+
+</table>
+
+</div>
+
+<script>
 
 async function loadStudents(){
 
-  const className =
-    document.getElementById("classSelect").value;
+const className =
+document.getElementById("classSelect").value;
 
-  const date =
-    document.getElementById("dateInput").value;
+const date =
+document.getElementById("dateInput").value;
 
-  const tbody =
-    document.getElementById("studentBody");
+const response =
+await fetch(
 
-  tbody.innerHTML =
-    "<tr><td colspan='3'>Loading...</td></tr>";
+"https://script.google.com/macros/s/AKfycbxd-0ZZSe4RKX0h2V9L7vKVnxKKc2IVNgeDdeJO5dS0tpER_o2ChCeUTY6RsbwCT1nR/exec?class="
 
-  try{
++ encodeURIComponent(className)
 
-    const response =
-      await fetch(
++ "&date="
 
-      "https://script.google.com/macros/s/AKfycbx__G0cQ52rE9VRG4XCTWJ_hrNAvvY1MQzsWNVfDUAJJeawElsRNepang5PNAnpMuxC/exec"
++ encodeURIComponent(date)
 
-      + encodeURIComponent(className)
+);
 
-      + "&date="
+const data =
+await response.json();
 
-      + encodeURIComponent(date)
+document.getElementById("totalCount")
+.innerText =
+data.totalStudents;
 
-    );
+document.getElementById("presentCount")
+.innerText =
+data.presentCount;
 
-    const data =
-      await response.json();
+document.getElementById("lateCount")
+.innerText =
+data.lateCount;
 
-    let students = [];
-    let totalStudents = 0;
+document.getElementById("absentCount")
+.innerText =
+data.absentCount;
 
-    if(Array.isArray(data)){
+const presentBody =
+document.getElementById("presentBody");
 
-      students = data;
-      totalStudents = data.length;
+const lateBody =
+document.getElementById("lateBody");
 
-    }else{
+const absentBody =
+document.getElementById("absentBody");
 
-      students = data.students || [];
-      totalStudents = data.totalStudents || 0;
+presentBody.innerHTML="";
+lateBody.innerHTML="";
+absentBody.innerHTML="";
 
-    }
+data.presentStudents.forEach(student=>{
 
-    tbody.innerHTML = "";
+presentBody.innerHTML +=
 
-    let present = 0;
-    let late = 0;
+`<tr>
+<td>${student.adm}</td>
+<td>${student.name}</td>
+<td>${student.status}</td>
+</tr>`;
 
-    if(students.length === 0){
+});
 
-      tbody.innerHTML =
-      "<tr><td colspan='3'>No attendance found</td></tr>";
+data.lateStudents.forEach(student=>{
 
-      document.getElementById("presentCount").innerText = 0;
-      document.getElementById("lateCount").innerText = 0;
-      document.getElementById("absentCount").innerText = totalStudents;
+lateBody.innerHTML +=
 
-      return;
+`<tr>
+<td>${student.adm}</td>
+<td>${student.name}</td>
+<td>${student.status}</td>
+</tr>`;
 
-    }
+});
 
-    students.forEach(student => {
+data.absentStudents.forEach(student=>{
 
-      const row =
-        document.createElement("tr");
+absentBody.innerHTML +=
 
-      row.innerHTML =
+`<tr>
+<td>${student.adm}</td>
+<td>${student.name}</td>
+<td>${student.status}</td>
+</tr>`;
 
-      "<td>" + student.adm + "</td>" +
-
-      "<td>" + student.name + "</td>" +
-
-      "<td>" + student.status + "</td>";
-
-      tbody.appendChild(row);
-
-      if(student.status === "PRESENT"){
-
-        present++;
-
-      }else if(student.status === "LATE"){
-
-        late++;
-
-      }
-
-    });
-
-    let absent =
-      totalStudents - (present + late);
-
-    if(absent < 0){
-
-      absent = 0;
-
-    }
-
-    document.getElementById("presentCount").innerText = present;
-    document.getElementById("lateCount").innerText = late;
-    document.getElementById("absentCount").innerText = absent;
-
-  }
-
-  catch(error){
-
-    console.log(error);
-
-    tbody.innerHTML =
-    "<tr><td colspan='3'>ERROR LOADING DATA</td></tr>";
-
-  }
-
-}
-
-function searchStudent(){
-
-  const input =
-    document.getElementById("searchInput")
-    .value
-    .toUpperCase();
-
-  const rows =
-    document.querySelectorAll("#studentBody tr");
-
-  rows.forEach(row => {
-
-    const text =
-      row.innerText.toUpperCase();
-
-    if(text.includes(input)){
-
-      row.style.display = "";
-
-    }else{
-
-      row.style.display = "none";
-
-    }
-
-  });
+});
 
 }
 
 </script>
-```
+
+</body>
+</html>
