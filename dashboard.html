@@ -196,8 +196,13 @@ await response.text();
 
 alert(text);
 
-const data =
-JSON.parse(text);
+const data = JSON.parse(text);
+
+alert(
+"Total: " + data.totalStudents +
+"\nPresent: " + data.presentCount +
+"\nAbsent: " + data.absentCount
+);
 
 document.getElementById("totalCount").innerText =
 data.totalStudents;
