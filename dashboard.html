@@ -169,7 +169,6 @@ PRINT REPORT
 
 <script>
 
-
 async function loadClasses(){
 
 const url =
@@ -184,7 +183,7 @@ document.getElementById("classSelect");
 
 select.innerHTML = "";
 
-classes.forEach(className=>{
+classes.forEach(className => {
 
 select.innerHTML +=
 `<option value="${className}">
@@ -194,6 +193,13 @@ ${className}
 });
 
 }
+
+async function loadStudents(){
+
+alert("LOAD CLICKED");
+
+}
+
 window.onload = function(){
 
 document.getElementById("dateInput").value =
