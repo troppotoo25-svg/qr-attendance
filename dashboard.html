@@ -2,122 +2,113 @@
 
 async function loadStudents() {
 
-const className =
-document.getElementById("classSelect").value.trim();
+  const className =
+    document.getElementById("classSelect").value.trim();
 
-const date =
-document.getElementById("dateInput").value;
+  const date =
+    document.getElementById("dateInput").value;
 
-if(!className){
-alert("Enter Class Name");
-return;
-}
+  if (!className) {
+    alert("Enter Class Name");
+    return;
+  }
 
-if(!date){
-alert("Select Date");
-return;
-}
+  if (!date) {
+    alert("Select Date");
+    return;
+  }
 
-const url =
-"https://script.google.com/macros/s/AKfycbxd-0ZZSe4RKX0h2V9L7vKVnxKKc2IVNgeDdeJO5dS0tpER_o2ChCeUTY6RsbwCT1nR/exec?class="
-+ encodeURIComponent(className)
-+ "&date="
-+ encodeURIComponent(date);
+  const url =
+    "https://script.google.com/macros/s/AKfycbxd-0ZZSe4RKX0h2V9L7vKVnxKKc2IVNgeDdeJO5dS0tpER_o2ChCeUTY6RsbwCT1nR/exec?class="
+    + encodeURIComponent(className)
+    + "&date="
+    + encodeURIComponent(date);
 
-console.log(url);
+  try {
 
-try {
+    const response =
+      await fetch(url);
 
-const response =
-await fetch(url);
+    const data =
+      await response.json();
 
-const data =
-await response.json();
+    document.getElementById("totalCount").innerText =
+      data.totalStudents || 0;
 
-console.log(data);
+    document.getElementById("presentCount").innerText =
+      data.presentCount || 0;
 
-document.getElementById("totalCount").innerText =
-data.totalStudents || 0;
+    document.getElementById("lateCount").innerText =
+      data.lateCount || 0;
 
-document.getElementById("presentCount").innerText =
-data.presentCount || 0;
+    document.getElementById("absentCount").innerText =
+      data.absentCount || 0;
 
-document.getElementById("lateCount").innerText =
-data.lateCount || 0;
+    const presentBody =
+      document.getElementById("presentBody");
 
-document.getElementById("absentCount").innerText =
-data.absentCount || 0;
+    const lateBody =
+      document.getElementById("lateBody");
 
-const presentBody =
-document.getElementById("presentBody");
+    const absentBody =
+      document.getElementById("absentBody");
 
-const lateBody =
-document.getElementById("lateBody");
+    presentBody.innerHTML = "";
+    lateBody.innerHTML = "";
+    absentBody.innerHTML = "";
 
-const absentBody =
-document.getElementById("absentBody");
+    (data.presentStudents || []).forEach(student => {
 
-presentBody.innerHTML = "";
-lateBody.innerHTML = "";
-absentBody.innerHTML = "";
+      presentBody.innerHTML += `
+      <tr>
+        <td>${student.adm}</td>
+        <td>${student.name}</td>
+        <td>${student.status}</td>
+      </tr>`;
 
-(data.presentStudents || []).forEach(student => {
+    });
 
-presentBody.innerHTML += `
-<tr>
-<td>${student.adm}</td>
-<td>${student.name}</td>
-<td>${student.status}</td>
-</tr>
-`;
+    (data.lateStudents || []).forEach(student => {
 
-});
+      lateBody.innerHTML += `
+      <tr>
+        <td>${student.adm}</td>
+        <td>${student.name}</td>
+        <td>${student.status}</td>
+      </tr>`;
 
-(data.lateStudents || []).forEach(student => {
+    });
 
-lateBody.innerHTML += `
-<tr>
-<td>${student.adm}</td>
-<td>${student.name}</td>
-<td>${student.status}</td>
-</tr>
-`;
+    (data.absentStudents || []).forEach(student => {
 
-});
+      absentBody.innerHTML += `
+      <tr>
+        <td>${student.adm}</td>
+        <td>${student.name}</td>
+        <td>${student.status}</td>
+      </tr>`;
 
-(data.absentStudents || []).forEach(student => {
+    });
 
-absentBody.innerHTML += `
-<tr>
-<td>${student.adm}</td>
-<td>${student.name}</td>
-<td>${student.status}</td>
-</tr>
-`;
+  }
+  catch (error) {
 
-});
+    console.error(error);
 
-}
-catch(error){
+    alert(
+      "Error Loading Data\n\n" +
+      error
+    );
 
-console.error(error);
-
-alert(
-"Error Loading Data\n\n" +
-error
-);
+  }
 
 }
 
-}
+window.onload = function () {
 
-window.onload = function(){
-
-document.getElementById("dateInput").value =
-new Date().toISOString().split("T")[0];
+  document.getElementById("dateInput").value =
+    new Date().toISOString().split("T")[0];
 
 };
-<button onclick="alert('BUTTON WORKING')">
-TEST
-</button>
+
 </script>
