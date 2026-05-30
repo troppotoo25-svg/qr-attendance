@@ -173,7 +173,20 @@ PRINT REPORT
 
 <script>
 
+function testData(){
+
+document.getElementById("totalCount").textContent = "25";
+document.getElementById("presentCount").textContent = "16";
+document.getElementById("lateCount").textContent = "0";
+document.getElementById("absentCount").textContent = "9";
+
+alert("JavaScript is working");
+
+}
+
 async function loadStudents(){
+
+try{
 
 const className =
 document.getElementById("classSelect").value.trim();
@@ -182,14 +195,20 @@ const date =
 document.getElementById("dateInput").value;
 
 const url =
-"https://script.google.com/macros/s/AKfycbzfi6ANbqdLP2c26OIfumYU1YgzlwA8c0KtKztuEI91o0yJ58UuVFEXJlPqL755R7Vy/exec"
+"https://script.google.com/macros/s/AKfycbwsm259_reFTa6XyIJS2cyr4XWoqbh5xX2vjaE0-J5VyDScxiDvzj9C6-piTxIp7Jpx/exec?class="
 + encodeURIComponent(className)
 + "&date="
 + encodeURIComponent(date);
 
+alert(url);
+
 const response = await fetch(url);
 
-const data = await response.json();
+const text = await response.text();
+
+alert(text);
+
+const data = JSON.parse(text);
 
 document.getElementById("totalCount").textContent =
 data.totalStudents;
@@ -203,66 +222,26 @@ data.lateCount;
 document.getElementById("absentCount").textContent =
 data.absentCount;
 
-const presentBody =
-document.getElementById("presentBody");
+}
+catch(err){
 
-const lateBody =
-document.getElementById("lateBody");
+alert("ERROR: " + err);
 
-const absentBody =
-document.getElementById("absentBody");
-
-presentBody.innerHTML = "";
-lateBody.innerHTML = "";
-absentBody.innerHTML = "";
-
-data.presentStudents.forEach(student => {
-
-presentBody.innerHTML += `
-<tr>
-<td>${student.adm}</td>
-<td>${student.name}</td>
-<td>${student.status}</td>
-</tr>
-`;
-
-});
-
-data.lateStudents.forEach(student => {
-
-lateBody.innerHTML += `
-<tr>
-<td>${student.adm}</td>
-<td>${student.name}</td>
-<td>${student.status}</td>
-</tr>
-`;
-
-});
-
-data.absentStudents.forEach(student => {
-
-absentBody.innerHTML += `
-<tr>
-<td>${student.adm}</td>
-<td>${student.name}</td>
-<td>${student.status}</td>
-</tr>
-`;
-
-});
+}
 
 }
 
 window.onload = function(){
 
+document.getElementById("classSelect").value =
+"FORM 3 G";
+
 document.getElementById("dateInput").value =
-new Date().toISOString().split("T")[0];
+"2026-05-29";
 
 };
 
 </script>
-
 </body>
 </html>
 
