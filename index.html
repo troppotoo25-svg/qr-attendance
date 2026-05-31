@@ -200,7 +200,13 @@ adm:text
 .then(r=>r.text())
 .then(msgText=>{
 
-alert("SERVER: " + msgText);
+alert("SERVER RESPONSE: " + msgText);
+
+msg.innerHTML = msgText;
+
+scanLock = false;
+
+})
 
 msg.innerHTML = msgText;
 
