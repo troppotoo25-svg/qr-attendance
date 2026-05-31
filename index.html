@@ -174,16 +174,17 @@ new ZXing.BrowserQRCodeReader();;
 result.getText().trim();
 
 alert("QR FOUND: " + text);
-          alert("AFTER QR ALERT");
 
-// beep.play();
+alert("AFTER QR ALERT");
 
 msg.innerHTML =
 "QR DETECTED: " + text;
+
 hiddenAdm.value = text;
 
 alert("SENDING ADM: " + text);
 
+beep.play();
 fetch(
 "https://script.google.com/macros/s/AKfycbx7G6ChSWRJPuWYD27FqqRgFYUdc9dpIm4QgUkydjvaum95inQJEB4RL1hYLBKeaktL/exec",
 {
