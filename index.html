@@ -100,15 +100,14 @@ document.getElementById("startBtn");
 
 const msg =
 document.getElementById("msg");
-  alert("BEFORE ONCLICK");
 
-startBtn.onclick = function(){
+const video =
+document.getElementById("video");
 
-  alert("BUTTON CLICKED");
+alert("BEFORE ONCLICK");
 
-  msg.innerHTML = "BUTTON WORKING";
+startBtn.onclick = startScanner;
 
-};
 async function startScanner(){
 
   try{
@@ -117,7 +116,8 @@ async function startScanner(){
 
     const stream =
     await navigator.mediaDevices.getUserMedia({
-      video:true
+      video:true,
+      audio:false
     });
 
     alert("CAMERA GRANTED");
@@ -129,13 +129,23 @@ async function startScanner(){
     alert("VIDEO PLAYING");
 
     msg.innerHTML =
-    "Camera Started";
+    "Camera Started Successfully";
 
   }
+
   catch(e){
 
-    alert("CAMERA ERROR: " + e);
+    alert("CAMERA ERROR: " + e.message);
+
+    msg.innerHTML =
+    "CAMERA ERROR: " + e.message;
 
   }
 
 }
+
+</script>
+
+</body>
+
+</html>
