@@ -178,13 +178,18 @@ alert("QR FOUND: " + text);
 alert("AFTER QR ALERT");
 
 msg.innerHTML =
+msg.innerHTML =
 "QR DETECTED: " + text;
+
+alert("STEP 1");
 
 hiddenAdm.value = text;
 
-alert("SENDING ADM: " + text);
+alert("STEP 2");
 
-beep.play();
+alert("ADM = " + hiddenAdm.value);
+
+alert("STEP 3");
 fetch(
 "https://script.google.com/macros/s/AKfycbx7G6ChSWRJPuWYD27FqqRgFYUdc9dpIm4QgUkydjvaum95inQJEB4RL1hYLBKeaktL/exec",
 {
