@@ -91,14 +91,10 @@ id="hiddenAdm">
 
 </form>
 
-</form>
-
 <script>
 
 alert("SCRIPT STARTED");
 
-const video =
-document.getElementById("video");
 
 const video =
 document.getElementById("video");
@@ -195,6 +191,7 @@ alert("STEP 2");
 alert("STEP 2");
 
 alert("ADM = " + hiddenAdm.value);
+          hiddenAdm.value = text;
 
 alert("STEP 3");
         
@@ -218,24 +215,6 @@ scanLock = false;
 
 })
 .catch(err=>{
-
-alert("ERROR: " + err);
-
-scanLock = false;
-
-});
-msg.innerHTML = msgText;
-
-scanLock = false;
-
-})
-.catch(err=>{
-
-alert("ERROR: " + err);
-
-scanLock = false;
-
-});
 
 setTimeout(function(){
 
