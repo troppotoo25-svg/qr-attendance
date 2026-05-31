@@ -93,8 +93,6 @@ id="hiddenAdm">
 
 <script>
 
-alert("SCRIPT STARTED");
-
 const startBtn =
 document.getElementById("startBtn");
 
@@ -108,34 +106,52 @@ startBtn.onclick = async function(){
 
   try{
 
-    alert("STARTING CAMERA");
-
     const stream =
     await navigator.mediaDevices.getUserMedia({
       video:true,
       audio:false
     });
 
-    alert("CAMERA GRANTED");
-
     video.srcObject = stream;
 
     await video.play();
 
-    alert("VIDEO PLAYING");
-
     msg.innerHTML =
-    "Camera Started Successfully";
+    "Scanning...";
+
+    const codeReader =
+    new ZXing.BrowserQRCodeReader();
+
+    codeReader.decodeFromVideoDevice(
+      null,
+      video,
+      (result, err) => {
+
+        if(result){
+
+          alert(
+            "QR FOUND: " +
+            result.getText()
+          );
+
+        }
+
+      }
+    );
 
   }
 
   catch(e){
 
-    alert("CAMERA ERROR: " + e.message);
+    alert(
+      "CAMERA ERROR: " +
+      e.message
+    );
 
   }
 
 };
+
 </script>
 </body>
 
