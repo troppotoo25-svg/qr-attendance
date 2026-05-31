@@ -184,10 +184,13 @@ alert("SENDING ADM: " + text);
 
 hiddenForm.submit();
 
-alert("FORM SUBMITTED");
+setTimeout(function(){
 
-msg.innerHTML =
-"Attendance Saved";
+  msg.innerHTML = "READY";
+
+  scanLock = false;
+
+},3000);
 
 setTimeout(() => {
 
