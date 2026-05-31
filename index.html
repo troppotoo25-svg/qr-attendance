@@ -144,8 +144,9 @@ startBtn.onclick = async function(){
           "SAVING: " + adm;
 
           fetch(
-            "https://script.google.com/macros/s/AKfycby6DS3_N_wtthb6tduumI_yQBDClM1a_F4HRwV1CME3XlV28WKgD1WNKxdHwYHFy-s/exec",
-            {
+            fetch(
+"https://script.google.com/macros/s/AKfycbzdAWGN4BmgcHjE2e0vtlAVc_Yw5x-7Ya-uE356D0WhpjcYyhk2ajLLClfIj_MxvztS/exec",
+{
               method:"POST",
               body:new URLSearchParams({
                 adm:adm
