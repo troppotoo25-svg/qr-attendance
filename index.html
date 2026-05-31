@@ -95,12 +95,47 @@ id="hiddenAdm">
 
 alert("SCRIPT STARTED");
 
-document.getElementById("startBtn").onclick = function(){
+const startBtn =
+document.getElementById("startBtn");
 
-  alert("BUTTON WORKS");
+const msg =
+document.getElementById("msg");
+
+const video =
+document.getElementById("video");
+
+startBtn.onclick = async function(){
+
+  try{
+
+    alert("STARTING CAMERA");
+
+    const stream =
+    await navigator.mediaDevices.getUserMedia({
+      video:true,
+      audio:false
+    });
+
+    alert("CAMERA GRANTED");
+
+    video.srcObject = stream;
+
+    await video.play();
+
+    alert("VIDEO PLAYING");
+
+    msg.innerHTML =
+    "Camera Started Successfully";
+
+  }
+
+  catch(e){
+
+    alert("CAMERA ERROR: " + e.message);
+
+  }
 
 };
-
 </script>
 </body>
 
