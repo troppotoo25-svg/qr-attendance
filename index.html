@@ -122,45 +122,6 @@ startBtn.onclick = async function(){
     const codeReader =
     new ZXing.BrowserQRCodeReader();
 
-   codeReader.decodeFromVideoDevice(
-  null,
-  video,
-  (result, err) => {
-
-    if(result){
-
-      const adm =
-      <script>
-
-const startBtn =
-document.getElementById("startBtn");
-
-const msg =
-document.getElementById("msg");
-
-const video =
-document.getElementById("video");
-
-startBtn.onclick = async function(){
-
-  try{
-
-    const stream =
-    await navigator.mediaDevices.getUserMedia({
-      video:true,
-      audio:false
-    });
-
-    video.srcObject = stream;
-
-    await video.play();
-
-    msg.innerHTML =
-    "Scanning...";
-
-    const codeReader =
-    new ZXing.BrowserQRCodeReader();
-
     codeReader.decodeFromVideoDevice(
       null,
       video,
@@ -191,7 +152,9 @@ startBtn.onclick = async function(){
   }
 
 };
-<script>
- <body>
 
 </script>
+
+</body>
+
+</html>
