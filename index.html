@@ -102,8 +102,11 @@ document.getElementById("msg");
 const video =
 document.getElementById("video");
 
-let scanLock = false;
+const beep = new Audio(
+  "https://actions.google.com/sounds/v1/cartoon/wood_plank_flicks.ogg"
+);
 
+let scanLock = false;
 startBtn.onclick = async function(){
 
   try{
