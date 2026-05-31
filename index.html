@@ -110,15 +110,31 @@ startBtn.onclick = function(){
 };
 async function startScanner(){
 
-  alert("START CAMERA CLICKED");
+  try{
 
-  msg.innerHTML =
-  "BUTTON WORKING";
+    alert("STARTING CAMERA");
+
+    const stream =
+    await navigator.mediaDevices.getUserMedia({
+      video:true
+    });
+
+    alert("CAMERA GRANTED");
+
+    video.srcObject = stream;
+
+    await video.play();
+
+    alert("VIDEO PLAYING");
+
+    msg.innerHTML =
+    "Camera Started";
+
+  }
+  catch(e){
+
+    alert("CAMERA ERROR: " + e);
+
+  }
 
 }
-</script>
-
-</body>
-
-</html>
-```
