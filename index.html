@@ -170,22 +170,32 @@ new ZXing.BrowserQRCodeReader();;
 
           lastScanTime = now;
 
-          const text =
-          result.getText().trim();
+         const text =
+result.getText().trim();
 
-          beep.play();
+beep.play();
 
-          msg.innerHTML =
-          "QR DETECTED: " + text;
+msg.innerHTML =
+"QR DETECTED: " + text;
 
-          hiddenAdm.value = text;
-          alert("SENDING ADM: " + text);
+hiddenAdm.value = text;
 
-          hiddenForm.submit();
+alert("SENDING ADM: " + text);
 
-          msg.innerHTML =
-          "Attendance Saved";
+hiddenForm.submit();
 
+alert("FORM SUBMITTED");
+
+msg.innerHTML =
+"Attendance Saved";
+
+setTimeout(() => {
+
+  scanLock = false;
+
+  msg.innerHTML = "Ready";
+
+},2000);
           setTimeout(() => {
 
             scanLock = false;
