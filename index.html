@@ -101,6 +101,13 @@ document.getElementById("msg");
 
 const video =
 document.getElementById("video");
+  const beep = new Audio(
+  "https://actions.google.com/sounds/v1/cartoon/wood_plank_flicks.ogg"
+);
+
+let scanLock = false;
+let lastScannedADM = "";
+  
 
 const beep = new Audio(
   "https://actions.google.com/sounds/v1/cartoon/wood_plank_flicks.ogg"
@@ -134,68 +141,54 @@ startBtn.onclick = async function(){
 
         if(result){
 
-          if(scanLock){
-            return;
-          }
+  const adm = result.getText().trim();
 
-          scanLock = true;
-           
-         const adm =
-          result.getText().trim();
-          beep.currentTime = 0;
+  // 🔴 BLOCK SAME ADM IMMEDIATELY
+  if(scanLock && lastScannedADM === adm){
+    return;
+  }
+
+  scanLock = true;
+  lastScannedADM = adm;
+
+  // 🔊 beep
+  beep.currentTime = 0;
   beep.play().catch(() => {});
 
-          msg.innerHTML =
-          "SAVING: " + adm;
-            fetch(
-"https://script.google.com/macros/s/AKfycbyzUMR8q7W6sa7Jg68gVLTmAUnXPYlNsuGGS8d-mxyEuGdpJapRZHbjsKcjLdqU--ED/exec",
-{
-              method:"POST",
-              body:new URLSearchParams({
-                adm:adm
-              })
-            }
-          )
-          .then(r => r.text())
-          .then(response => {
+  msg.innerHTML = "SAVING: " + adm;
 
-            msg.innerHTML = response;
+  fetch("https://script.google.com/macros/s/AKfycbyzUMR8q7W6sa7Jg68gVLTmAUnXPYlNsuGGS8d-mxyEuGdpJapRZHbjsKcjLdqU--ED/exec", {
+    method:"POST",
+    body:new URLSearchParams({
+      adm:adm
+    })
+  })
+  .then(r => r.text())
+  .then(response => {
 
-            setTimeout(function(){
+    msg.innerHTML = response;
 
-              msg.innerHTML = "READY";
-              scanLock = false;
+    setTimeout(function(){
 
-            },5000);
+      msg.innerHTML = "READY";
 
-          })
-          .catch(error => {
+      // 🔓 reset BOTH locks
+      scanLock = false;
+      lastScannedADM = "";
 
-            msg.innerHTML =
-            "ERROR: " + error;
+    },5000);
 
-            scanLock = false;
+  })
+  .catch(error => {
 
-          });
+    msg.innerHTML = "ERROR: " + error;
 
-        }
+    scanLock = false;
+    lastScannedADM = "";
 
-      }
-    );
+  });
 
-  }
-
-  catch(e){
-
-    alert(
-      "CAMERA ERROR: " +
-      e.message
-    );
-
-  }
-
-};
-
+}
 </script>
 
 </body>
