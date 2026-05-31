@@ -127,7 +127,15 @@ startBtn.onclick = async function(){
       video,
       (result, err) => {
 
-        if(result){
+       if(result){
+
+  const adm =
+  result.getText().trim();
+
+  msg.innerHTML =
+  "QR FOUND: " + adm;
+
+}
 
           alert(
             "QR FOUND: " +
