@@ -1,4 +1,4 @@
-```html
+
 <!DOCTYPE html>
 <html>
 
@@ -157,12 +157,12 @@ async function startScanner(){
 
           const now = Date.now();
 
-          if(
-            scanLock ||
-            now - lastScanTime < 5000
-          ){
-            return;
-          }
+        if(
+  scanLock ||
+  now - lastScanTime < 1500
+){
+  return;
+}
 
           scanLock = true;
 
@@ -190,7 +190,7 @@ async function startScanner(){
             msg.innerHTML =
             "Ready";
 
-          },5000);
+      },1500);
 
         }
 
