@@ -95,32 +95,19 @@ id="hiddenAdm">
 
 alert("SCRIPT STARTED");
 
-
-const video =
-document.getElementById("video");
+const startBtn =
+document.getElementById("startBtn");
 
 const msg =
 document.getElementById("msg");
 
-const startBtn =
-document.getElementById("startBtn");
+startBtn.onclick = function(){
 
-const hiddenForm =
-document.getElementById("hiddenForm");
-  const hiddenAdm =
-document.getElementById("hiddenAdm");
+  alert("BUTTON CLICKED");
 
+  msg.innerHTML = "BUTTON WORKING";
 
-let scanLock = false;
-
-let lastScanTime = 0;
-
-const beep = new Audio(
-"https://actions.google.com/sounds/v1/cartoon/wood_plank_flicks.ogg"
-);
-
-startBtn.onclick = startScanner;
-
+};
 async function startScanner(){
 
   try{
