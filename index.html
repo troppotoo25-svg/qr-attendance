@@ -127,45 +127,7 @@ startBtn.onclick = async function(){
       video,
       (result, err) => {
 
-       if(result){
-
-  const adm =
-  result.getText().trim();
-
-  msg.innerHTML =
-  "SAVING: " + adm;
-
-  fetch(
-    "YOUR_WEB_APP_URL_HERE",
-    {
-      method:"POST",
-      body:new URLSearchParams({
-        adm:adm
-      })
-    }
-  )
-  .then(r => r.text())
-  .then(response => {
-
-    msg.innerHTML =
-    response;
-
-    setTimeout(function(){
-
-      msg.innerHTML =
-      "READY";
-
-    },2000);
-
-  })
-  .catch(error => {
-
-    msg.innerHTML =
-    "ERROR: " + error;
-
-  });
-
-}
+        if(result){
 
           const adm =
           result.getText().trim();
