@@ -126,15 +126,17 @@ async function startScanner(){
     "Opening camera...";
 
     const stream =
-    await navigator.mediaDevices.getUserMedia({
+await navigator.mediaDevices.getUserMedia({
 
-      video:{
-        facingMode:"environment"
-      },
+  video:{
+    facingMode:"environment",
+    width:{ideal:1280},
+    height:{ideal:720}
+  },
 
-      audio:false
+  audio:false
 
-    });
+});
 
     video.srcObject = stream;
 
@@ -143,8 +145,8 @@ async function startScanner(){
     msg.innerHTML =
     "Scanning QR code...";
 
-    const codeReader =
-    new ZXing.BrowserMultiFormatReader();
+   const codeReader =
+new ZXing.BrowserQRCodeReader();;
 
     codeReader.decodeFromVideoDevice(
 
