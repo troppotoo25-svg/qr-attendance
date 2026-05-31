@@ -173,11 +173,12 @@ new ZXing.BrowserQRCodeReader();;
          const text =
 result.getText().trim();
 
+alert("QR FOUND: " + text);
+
 beep.play();
 
 msg.innerHTML =
 "QR DETECTED: " + text;
-
 hiddenAdm.value = text;
 
 alert("SENDING ADM: " + text);
