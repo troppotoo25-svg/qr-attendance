@@ -130,15 +130,57 @@ startBtn.onclick = async function(){
     if(result){
 
       const adm =
-      result.getText().trim();
+      <script>
 
-      msg.innerHTML =
-      "QR FOUND: " + adm;
+const startBtn =
+document.getElementById("startBtn");
 
-    }
+const msg =
+document.getElementById("msg");
+
+const video =
+document.getElementById("video");
+
+startBtn.onclick = async function(){
+
+  try{
+
+    const stream =
+    await navigator.mediaDevices.getUserMedia({
+      video:true,
+      audio:false
+    });
+
+    video.srcObject = stream;
+
+    await video.play();
+
+    msg.innerHTML =
+    "Scanning...";
+
+    const codeReader =
+    new ZXing.BrowserQRCodeReader();
+
+    codeReader.decodeFromVideoDevice(
+      null,
+      video,
+      (result, err) => {
+
+        if(result){
+
+          const adm =
+          result.getText().trim();
+
+          msg.innerHTML =
+          "QR FOUND: " + adm;
+
+        }
+
+      }
+    );
 
   }
-);
+
   catch(e){
 
     alert(
@@ -149,8 +191,7 @@ startBtn.onclick = async function(){
   }
 
 };
+<script>
+ <body>
 
 </script>
-</body>
-
-</html>
