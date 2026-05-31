@@ -183,7 +183,32 @@ hiddenAdm.value = text;
 
 alert("SENDING ADM: " + text);
 
-hiddenForm.submit();
+fetch(
+"https://script.google.com/macros/s/AKfycbx7G6ChSWRJPuWYD27FqqRgFYUdc9dpIm4QgUkydjvaum95inQJEB4RL1hYLBKeaktL/exec",
+{
+method:"POST",
+body:new URLSearchParams({
+adm:text
+})
+}
+)
+.then(r=>r.text())
+.then(msgText=>{
+
+alert("SERVER: " + msgText);
+
+msg.innerHTML = msgText;
+
+scanLock = false;
+
+})
+.catch(err=>{
+
+alert("ERROR: " + err);
+
+scanLock = false;
+
+});
 
 setTimeout(function(){
 
