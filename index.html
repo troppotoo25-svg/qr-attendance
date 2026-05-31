@@ -139,6 +139,11 @@ startBtn.onclick = async function(){
           }
 
           scanLock = true;
+          beep.currentTime = 0;
+  beep.play().catch(() => {});
+
+  const adm =
+  result.getText().trim();
 
           const adm =
           result.getText().trim();
