@@ -123,38 +123,64 @@ startBtn.onclick = async function(){
     new ZXing.BrowserQRCodeReader();
 
     codeReader.decodeFromVideoDevice(
-      null,
-      video,
-      (result, err) => {
+  null,
+  video,
+  (result, err) => {
 
-        if(result){
+    if(result){
 
-          const adm =
-          result.getText().trim();
+      const adm =
+      result.getText().trim();
 
-          msg.innerHTML =
-          "QR FOUND: " + adm;
+      msg.innerHTML =
+      "SAVING: " + adm;
 
+      fetch(
+        "https://script.google.com/macros/s/AKfycby6DS3_N_wtthb6tduumI_yQBDClM1a_F4HRwV1CME3XlV28WKgD1WNKxdHwYHFy-s/exec",
+        {
+          method:"POST",
+          body:new URLSearchParams({
+            adm:adm
+          })
         }
+      )
+      .then(r => r.text())
+      .then(response => {
 
-      }
-    );
+        msg.innerHTML = response;
+
+        setTimeout(function(){
+
+          msg.innerHTML = "READY";
+
+        },2000);
+
+      })
+      .catch(error => {
+
+        msg.innerHTML =
+        "ERROR: " + error;
+
+      });
+
+    }
 
   }
+);
 
-  catch(e){
+}
+catch(e){
 
-    alert(
-      "CAMERA ERROR: " +
-      e.message
-    );
+  alert(
+    "CAMERA ERROR: " +
+    e.message
+  );
 
-  }
+}
 
 };
 
 </script>
 
 </body>
-
 </html>
