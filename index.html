@@ -188,6 +188,36 @@ alert("STEP 2");
 alert("ADM = " + hiddenAdm.value);
 
 alert("STEP 3");
+          alert("STEP 3");
+
+alert("BEFORE FETCH");
+
+fetch(
+"https://script.google.com/macros/s/AKfycbx7G6ChSWRJPuWYD27FqqRgFYUdc9dpIm4QgUkydjvaum95inQJEB4RL1hYLBKeaktL/exec",
+{
+method:"POST",
+body:new URLSearchParams({
+adm:text
+})
+}
+)
+.then(r=>{
+
+alert("FETCH RETURNED");
+
+return r.text();
+
+})
+.then(msgText=>{
+
+alert("SERVER: " + msgText);
+
+})
+.catch(err=>{
+
+alert("ERROR: " + err);
+
+});
 fetch(
 "https://script.google.com/macros/s/AKfycbx7G6ChSWRJPuWYD27FqqRgFYUdc9dpIm4QgUkydjvaum95inQJEB4RL1hYLBKeaktL/exec",
 {
