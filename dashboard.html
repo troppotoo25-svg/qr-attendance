@@ -263,8 +263,8 @@ PRINT REPORT
 async function loadClasses(){
 
 const url =
-"https://script.google.com/macros/s/AKfycbzB4Q6nww3tG0jnI4ketvDCU8S5IJGDl0iSw5trm2arwiSkf4MCm3WFoxtq7jaVORlJ/exec?action=classes";
-
+const url =
+"https://script.google.com/macros/s/AKfycbzdAWGN4BmgcHjE2e0vtlAVc_Yw5x-7Ya-uE356D0WhpjcYyhk2ajLLClfIj_MxvztS/exec?action=classes";
 const response = await fetch(url);
 
 const classes = await response.json();
@@ -296,7 +296,8 @@ const date =
 document.getElementById("dateInput").value;
 
 const url =
-"https://script.google.com/macros/s/AKfycbzB4Q6nww3tG0jnI4ketvDCU8S5IJGDl0iSw5trm2arwiSkf4MCm3WFoxtq7jaVORlJ/exec?class="
+const url =
+"https://script.google.com/macros/s/AKfycbzdAWGN4BmgcHjE2e0vtlAVc_Yw5x-7Ya-uE356D0WhpjcYyhk2ajLLClfIj_MxvztS/exec?class="
 + encodeURIComponent(className)
 + "&date="
 + encodeURIComponent(date);
