@@ -261,28 +261,39 @@ PRINT REPORT
 <script>
 
 async function loadClasses(){
-  alert("loadClasses started");
 
-const response = await fetch(
-"https://script.google.com/macros/s/AKfycbzdAWGN4BmgcHjE2e0vtlAVc_Yw5x-7Ya-uE356D0WhpjcYyhk2ajLLClfIj_MxvztS/exec?action=classes"
-);
-
-const classes = await response.json();
+try{
 
 const select =
 document.getElementById("classSelect");
 
 select.innerHTML =
-'<option value="">SELECT CLASS</option>';
+"<option>Loading...</option>";
+
+const response = await fetch(
+"https://script.google.com/macros/s/AKfycbzdAWGN4BmgcHjE2e0vtlAVc_Yw5x-7Ya-uE356D0WhpjcYyhk2ajLLClfIj_MxvztS/exec?action=classes"
+);
+
+const classes =
+await response.json();
+
+select.innerHTML = "";
 
 classes.forEach(className => {
 
-  select.innerHTML +=
-  `<option value="${className}">
-  ${className}
-  </option>`;
+select.innerHTML +=
+`<option value="${className}">
+${className}
+</option>`;
 
 });
+
+}
+catch(error){
+
+alert("LOAD CLASSES ERROR: " + error);
+
+}
 
 }
 async function loadStudents(){
