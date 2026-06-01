@@ -216,7 +216,8 @@ PRINT REPORT
 <tr>
 <th>ADM</th>
 <th>Name</th>
-<th>Status</th>
+<th>Login</th>
+<th>Logout</th>
 </tr>
 </thead>
 <tbody id="presentBody"></tbody>
@@ -233,7 +234,8 @@ PRINT REPORT
 <tr>
 <th>ADM</th>
 <th>Name</th>
-<th>Status</th>
+<th>Login</th>
+<th>Logout</th>
 </tr>
 </thead>
 <tbody id="lateBody"></tbody>
@@ -250,7 +252,8 @@ PRINT REPORT
 <tr>
 <th>ADM</th>
 <th>Name</th>
-<th>Status</th>
+<th>Login</th>
+<th>Logout</th>
 </tr>
 </thead>
 <tbody id="absentBody"></tbody>
@@ -347,7 +350,8 @@ presentBody.innerHTML += `
 <tr>
 <td>${student.adm}</td>
 <td>${student.name}</td>
-<td>${student.status}</td>
+<td>${student.login || ""}</td>
+<td>${student.logout || ""}</td>
 </tr>
 `;
 
@@ -359,7 +363,8 @@ lateBody.innerHTML += `
 <tr>
 <td>${student.adm}</td>
 <td>${student.name}</td>
-<td>${student.status}</td>
+<td>${student.login || ""}</td>
+<td>${student.logout || ""}</td>
 </tr>
 `;
 
