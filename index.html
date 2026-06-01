@@ -93,46 +93,33 @@ id="hiddenAdm">
 
 <script>
 
-const startBtn =
-document.getElementById("startBtn");
+const startBtn = document.getElementById("startBtn");
+const msg = document.getElementById("msg");
+const video = document.getElementById("video");
 
-const msg =
-document.getElementById("msg");
-
-const video =
-document.getElementById("video");
-  const beep = new Audio(
-  "https://actions.google.com/sounds/v1/cartoon/wood_plank_flicks.ogg"
-);
-
-let scanLock = false;
-let lastScannedADM = "";
-  
-
+// 🔊 beep ONLY ONCE
 const beep = new Audio(
   "https://actions.google.com/sounds/v1/cartoon/wood_plank_flicks.ogg"
 );
 
 let scanLock = false;
+let lastScannedADM = "";
+
 startBtn.onclick = async function(){
 
   try{
 
-    const stream =
-    await navigator.mediaDevices.getUserMedia({
-      video:true,
-      audio:false
+    const stream = await navigator.mediaDevices.getUserMedia({
+      video: true,
+      audio: false
     });
 
     video.srcObject = stream;
-
     await video.play();
 
-    msg.innerHTML =
-    "Scanning...";
+    msg.innerHTML = "Scanning...";
 
-    const codeReader =
-    new ZXing.BrowserQRCodeReader();
+    const codeReader = new ZXing.BrowserQRCodeReader();
 
     codeReader.decodeFromVideoDevice(
       null,
@@ -141,54 +128,61 @@ startBtn.onclick = async function(){
 
         if(result){
 
-  const adm = result.getText().trim();
+          const adm = result.getText().trim();
 
-  // 🔴 BLOCK SAME ADM IMMEDIATELY
-  if(scanLock && lastScannedADM === adm){
-    return;
+          if(scanLock && lastScannedADM === adm){
+            return;
+          }
+
+          scanLock = true;
+          lastScannedADM = adm;
+
+          // 🔊 beep
+          beep.currentTime = 0;
+          beep.play().catch(() => {});
+
+          msg.innerHTML = "SAVING: " + adm;
+
+          fetch("https://script.google.com/macros/s/AKfycbyzUMR8q7W6sa7Jg68gVLTmAUnXPYlNsuGGS8d-mxyEuGdpJapRZHbjsKcjLdqU--ED/exec", {
+            method: "POST",
+            body: new URLSearchParams({
+              adm: adm
+            })
+          })
+          .then(r => r.text())
+          .then(response => {
+
+            msg.innerHTML = response;
+
+            setTimeout(() => {
+              msg.innerHTML = "READY";
+              scanLock = false;
+              lastScannedADM = "";
+            }, 5000);
+
+          })
+          .catch(error => {
+
+            msg.innerHTML = "ERROR: " + error;
+
+            scanLock = false;
+            lastScannedADM = "";
+
+          });
+
+        }
+
+      }
+    );
+
   }
 
-  scanLock = true;
-  lastScannedADM = adm;
+  catch(e){
+    alert("CAMERA ERROR: " + e.message);
+  }
 
-  // 🔊 beep
-  beep.currentTime = 0;
-  beep.play().catch(() => {});
+};
 
-  msg.innerHTML = "SAVING: " + adm;
-
-  fetch("https://script.google.com/macros/s/AKfycbyzUMR8q7W6sa7Jg68gVLTmAUnXPYlNsuGGS8d-mxyEuGdpJapRZHbjsKcjLdqU--ED/exec", {
-    method:"POST",
-    body:new URLSearchParams({
-      adm:adm
-    })
-  })
-  .then(r => r.text())
-  .then(response => {
-
-    msg.innerHTML = response;
-
-    setTimeout(function(){
-
-      msg.innerHTML = "READY";
-
-      // 🔓 reset BOTH locks
-      scanLock = false;
-      lastScannedADM = "";
-
-    },5000);
-
-  })
-  .catch(error => {
-
-    msg.innerHTML = "ERROR: " + error;
-
-    scanLock = false;
-    lastScannedADM = "";
-
-  });
-
-}
 </script>
 
 </body>
