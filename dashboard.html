@@ -346,15 +346,8 @@ absentBody.innerHTML = "";
 
 data.presentStudents.forEach(student => {
 
-const loginTime =
-student.login
-? String(student.login).substring(11,19)
-: "";
-
-const logoutTime =
-student.logout
-? String(student.logout).substring(11,19)
-: "";
+const loginTime = student.login || "";
+const logoutTime = student.logout || "";
 
 presentBody.innerHTML += `
 <tr>
