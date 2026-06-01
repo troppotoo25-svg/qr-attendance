@@ -345,8 +345,15 @@ absentBody.innerHTML = "";
 
 data.presentStudents.forEach(student => {
 
-const loginTime = student.login || "";
-const logoutTime = student.logout || "";
+const loginTime =
+student.login
+? String(student.login).match(/\d{2}:\d{2}:\d{2}/)?.[0] || ""
+: "";
+
+const logoutTime =
+student.logout
+? String(student.logout).match(/\d{2}:\d{2}:\d{2}/)?.[0] || ""
+: "";
 
 presentBody.innerHTML += `
 <tr>
@@ -361,10 +368,14 @@ presentBody.innerHTML += `
 data.lateStudents.forEach(student => {
 
 const loginTime =
-student.login || "";
+student.login
+? String(student.login).match(/\d{2}:\d{2}:\d{2}/)?.[0] || ""
+: "";
 
 const logoutTime =
-student.logout || "";
+student.logout
+? String(student.logout).match(/\d{2}:\d{2}:\d{2}/)?.[0] || ""
+: "";
 
 lateBody.innerHTML += `
 <tr>
