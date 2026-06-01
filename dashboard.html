@@ -344,25 +344,44 @@ absentBody.innerHTML = "";
 
 data.presentStudents.forEach(student => {
 
+const loginTime =
+student.login
+? String(student.login).substring(11,19)
+: "";
+
+const logoutTime =
+student.logout
+? String(student.logout).substring(11,19)
+: "";
+
 presentBody.innerHTML += `
 <tr>
 <td>${student.adm}</td>
 <td>${student.name}</td>
-<td>${student.login || ""}</td>
-<td>${student.logout || ""}</td>
+<td>${loginTime}</td>
+<td>${logoutTime}</td>
 </tr>
 `;
 
 });
-
 data.lateStudents.forEach(student => {
+
+const loginTime =
+student.login
+? String(student.login).substring(11,19)
+: "";
+
+const logoutTime =
+student.logout
+? String(student.logout).substring(11,19)
+: "";
 
 lateBody.innerHTML += `
 <tr>
 <td>${student.adm}</td>
 <td>${student.name}</td>
-<td>${student.login || ""}</td>
-<td>${student.logout || ""}</td>
+<td>${loginTime}</td>
+<td>${logoutTime}</td>
 </tr>
 `;
 
