@@ -320,6 +320,8 @@ const url =
 const response = await fetch(url);
 
 const data = await response.json();
+  alert(JSON.stringify(data));
+return;
 
 document.getElementById("totalCount").textContent =
 data.totalStudents;
