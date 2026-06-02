@@ -317,11 +317,10 @@ const date =
 document.getElementById("dateInput").value;
 
 const url =
-"https://script.google.com/macros/s/AKfycbzDUJAZ-9KeoFZjH8aq_VZ5dQGaaepp0t-QK25icDpu3Xh8hzX9tsf_WOzMj_1ZKdUM/execc?class="
+"https://script.google.com/macros/s/AKfycbzDUJAZ-9KeoFZjH8aq_VZ5dQGaaepp0t-QK25icDpu3Xh8hzX9tsf_WOzMj_1ZKdUM/exec?class="
 + encodeURIComponent(className)
 + "&date="
-+ encodeURIComponent(date);
-  alert(url);
++ encodeURIComponent(date)
 
 const response = await fetch(url);
 
