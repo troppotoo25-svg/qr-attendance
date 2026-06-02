@@ -404,10 +404,20 @@ new Date().toISOString().split("T")[0];
 
 await loadClasses();
 
-loadStudents();
+// only load if class exists
+setTimeout(() => {
+
+const classSelect = document.getElementById("classSelect");
+
+if(classSelect.value && classSelect.value !== ""){
+
+  loadStudents();
+
+}
+
+}, 500);
 
 };
-
 </script>
 </body>
 </html>
