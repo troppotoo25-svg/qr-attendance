@@ -317,7 +317,7 @@ const date =
 document.getElementById("dateInput").value;
 
 const url =
-"https://script.google.com/macros/s/AKfycbwGLQF0MZM3HL9sQXNsKcTxm0d15PJCRcMw2IyZr_sCE77LLdA18N-Dsvf6b5GxZGw/exec?class="
+"https://script.google.com/macros/s/AKfycbx4hGs2-tvA0X5gstxeVfznjRUCMRq8xrpxUiE79-sPmehUXY751ETNnw-YdPEaiBY/exec?class="
 + encodeURIComponent(className)
 + "&date="
 + encodeURIComponent(date);
@@ -325,85 +325,65 @@ const url =
 const response = await fetch(url);
 
 const data = await response.json();
-  alert(JSON.stringify(data));
-return;
 
-document.getElementById("totalCount").textContent =
-data.totalStudents;
+// DEBUG (IMPORTANT)
+console.log(data);
 
-document.getElementById("presentCount").textContent =
-data.presentCount;
+// =====================
+// COUNTS
+// =====================
+document.getElementById("totalCount").textContent = data.totalStudents || 0;
+document.getElementById("presentCount").textContent = data.presentCount || 0;
+document.getElementById("lateCount").textContent = data.lateCount || 0;
+document.getElementById("absentCount").textContent = data.absentCount || 0;
 
-document.getElementById("lateCount").textContent =
-data.lateCount;
-
-document.getElementById("absentCount").textContent =
-data.absentCount;
-const presentBody =
-document.getElementById("presentBody");
-
-const lateBody =
-document.getElementById("lateBody");
-
-const absentBody =
-document.getElementById("absentBody");
+// =====================
+// TABLES
+// =====================
+const presentBody = document.getElementById("presentBody");
+const lateBody = document.getElementById("lateBody");
+const absentBody = document.getElementById("absentBody");
 
 presentBody.innerHTML = "";
 lateBody.innerHTML = "";
 absentBody.innerHTML = "";
 
-data.presentStudents.forEach(student => {
-
-const loginTime =
-student.login
-? String(student.login).match(/\d{2}:\d{2}:\d{2}/)?.[0] || ""
-: "";
-
-const logoutTime =
-student.logout
-? String(student.logout).match(/\d{2}:\d{2}:\d{2}/)?.[0] || ""
-: "";
+// PRESENT
+(data.presentStudents || []).forEach(s => {
 
 presentBody.innerHTML += `
 <tr>
-<td>${student.adm}</td>
-<td>${student.name}</td>
-<td>${loginTime}</td>
-<td>${logoutTime}</td>
+<td>${s.adm}</td>
+<td>${s.name}</td>
+<td>${s.login || ""}</td>
+<td>${s.logout || ""}</td>
 </tr>
 `;
 
 });
-data.lateStudents.forEach(student => {
 
-const loginTime =
-student.login
-? String(student.login).match(/\d{2}:\d{2}:\d{2}/)?.[0] || ""
-: "";
-
-const logoutTime =
-student.logout
-? String(student.logout).match(/\d{2}:\d{2}:\d{2}/)?.[0] || ""
-: "";
+// LATE
+(data.lateStudents || []).forEach(s => {
 
 lateBody.innerHTML += `
 <tr>
-<td>${student.adm}</td>
-<td>${student.name}</td>
-<td>${loginTime}</td>
-<td>${logoutTime}</td>
+<td>${s.adm}</td>
+<td>${s.name}</td>
+<td>${s.login || ""}</td>
+<td>${s.logout || ""}</td>
 </tr>
 `;
 
 });
 
-data.absentStudents.forEach(student => {
+// ABSENT
+(data.absentStudents || []).forEach(s => {
 
 absentBody.innerHTML += `
 <tr>
-<td>${student.adm}</td>
-<td>${student.name}</td>
-<td>${student.status}</td>
+<td>${s.adm}</td>
+<td>${s.name}</td>
+<td>${s.status}</td>
 </tr>
 `;
 
