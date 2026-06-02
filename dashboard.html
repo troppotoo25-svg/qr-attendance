@@ -359,22 +359,39 @@ presentBody.innerHTML += `
 <tr>
 <td>${s.adm}</td>
 <td>${s.name}</td>
-<td>${s.login || ""}</td>
-<td>${s.logout || ""}</td>
+const loginTime =
+student.login
+? String(student.login).match(/\d{2}:\d{2}:\d{2}/)?.[0] || ""
+: "";
+
+const logoutTime =
+student.logout
+? String(student.logout).match(/\d{2}:\d{2}:\d{2}/)?.[0] || ""
+: "";
 </tr>
 `;
 
 });
 
-// LATE
+/// LATE
 (data.lateStudents || []).forEach(s => {
+
+const loginTime =
+s.login
+? String(s.login).match(/\d{2}:\d{2}:\d{2}/)?.[0] || ""
+: "";
+
+const logoutTime =
+s.logout
+? String(s.logout).match(/\d{2}:\d{2}:\d{2}/)?.[0] || ""
+: "";
 
 lateBody.innerHTML += `
 <tr>
 <td>${s.adm}</td>
 <td>${s.name}</td>
-<td>${s.login || ""}</td>
-<td>${s.logout || ""}</td>
+<td>${loginTime}</td>
+<td>${logoutTime}</td>
 </tr>
 `;
 
