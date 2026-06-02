@@ -278,7 +278,9 @@ const response = await fetch(
 
 const classes =
 await response.json();
-  alert("CLASSES LOADED: " + classes.length);
+
+alert(JSON.stringify(classes));
+return;;
   alert(JSON.stringify(classes));
 
 select.innerHTML = "";
