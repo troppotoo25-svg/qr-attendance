@@ -279,15 +279,20 @@ const response = await fetch(
 const classes =
 await response.json();
 
-alert(typeof classes);
-alert(JSON.stringify(classes));
-
 select.innerHTML = "";
+
+if(!Array.isArray(classes)){
+
+  alert("Classes returned are not an array");
+  alert(JSON.stringify(classes));
+  return;
+
+}
 
 classes.forEach(className => {
 
-select.innerHTML +=
-`<option value="${className}">
+select.innerHTML += `
+<option value="${className}">
 ${className}
 </option>`;
 
@@ -319,9 +324,7 @@ const url =
 
 const response = await fetch(url);
 
-const text = await response.text();
-alert(text);
-return;
+const data = await response.json();
   alert(JSON.stringify(data));
 return;
 
