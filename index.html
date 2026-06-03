@@ -132,44 +132,30 @@ startBtn.onclick = async function(){
 
   try{
 
- const devices =
-await navigator.mediaDevices.enumerateDevices();
+    const stream = await navigator.mediaDevices.getUserMedia({
+      video: true,
+      audio: false
+    });
 
-const backCamera =
-devices.find(
-d =>
-d.kind === "videoinput" &&
-d.label.toLowerCase().includes("back")
-);
-
-const stream =
-await navigator.mediaDevices.getUserMedia({
-video:{
-deviceId:{
-exact: backCamera.deviceId
-}
-}
-});
     video.srcObject = stream;
     await video.play();
 
     msg.innerHTML = "Scanning...";
 
-const codeReader = new ZXing.BrowserMultiFormatReader();
+    const codeReader = new ZXing.BrowserQRCodeReader();
 
     codeReader.decodeFromVideoDevice(
       null,
       video,
       (result, err) => {
 
-      if(result){
+        if(result){
 
+          const adm = result.getText().trim();
 
-const adm = result.getText().trim();
-
-if(scanLock && lastScannedADM === adm){
-  return;
-}
+          if(scanLock && lastScannedADM === adm){
+            return;
+          }
 
           scanLock = true;
           lastScannedADM = adm;
@@ -224,4 +210,3 @@ lastScannedADM = "";
 
 </body>
 </html>
-
