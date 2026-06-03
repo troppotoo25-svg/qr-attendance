@@ -68,7 +68,21 @@ display:none;
 
 <br>
 
-<button id="startBtn">
+<button onclick="setMode('LOGIN')">
+LOGIN MODE
+</button>
+
+<button onclick="setMode('LOGOUT')">
+LOGOUT MODE
+</button>
+
+<div id="modeDisplay">
+Current Mode: LOGIN
+</div>
+
+<br>
+
+<button onclick="startScanner()">
 START CAMERA
 </button>
 
@@ -105,6 +119,15 @@ const beep = new Audio(
 let scanLock = false;
 let lastScannedADM = "";
 
+let currentMode = "LOGIN";
+function setMode(mode){
+
+  currentMode = mode;
+
+  document.getElementById("modeDisplay").innerHTML =
+    "Current Mode: " + mode;
+
+}
 startBtn.onclick = async function(){
 
   try{
