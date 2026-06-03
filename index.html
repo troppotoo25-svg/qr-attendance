@@ -82,7 +82,7 @@ Current Mode: LOGIN
 
 <br>
 
-<button onclick="startScanner()">
+<button id="startBtn">
 START CAMERA
 </button>
 
@@ -164,21 +164,34 @@ startBtn.onclick = async function(){
           beep.currentTime = 0;
           beep.play().catch(() => {});
 
-          msg.innerHTML = "SAVING: " + adm;
+          fetch("https://script.google.com/macros/s/AKfycbzAwy0xHs0RaYlwCQ14Ab1itixVZCFDiJ9pM9HVmnAocqPNg-Xe1adYixSeWPpH39_b/exec", {
+method: "POST",
+body: new URLSearchParams({
+adm: adm,
+mode: currentMode
+})
+})
+.then(r => r.text())
+.then(response => {
 
-    ())
-          .then(response => {
+msg.innerHTML = response;
 
-            msg.innerHTML = response;
+setTimeout(() => {
+msg.innerHTML = "READY";
+scanLock = false;
+lastScannedADM = "";
+}, 5000);
 
-            setTimeout(() => {
-              msg.innerHTML = "READY";
-              scanLock = false;
-              lastScannedADM = "";
-            }, 5000);
+})
+.catch(error => {
 
-          })
-          .catch(error => {
+msg.innerHTML = "ERROR: " + error;
+
+scanLock = false;
+lastScannedADM = "";
+
+});
+
 
             msg.innerHTML = "ERROR: " + error;
 
