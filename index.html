@@ -149,13 +149,15 @@ startBtn.onclick = async function(){
       video,
       (result, err) => {
 
-        if(result){
+      if(result){
 
-          const adm = result.getText().trim();
+alert("QR FOUND: " + result.getText());
 
-          if(scanLock && lastScannedADM === adm){
-            return;
-          }
+const adm = result.getText().trim();
+
+if(scanLock && lastScannedADM === adm){
+  return;
+}
 
           scanLock = true;
           lastScannedADM = adm;
