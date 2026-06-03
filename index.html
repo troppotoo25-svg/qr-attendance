@@ -142,7 +142,7 @@ startBtn.onclick = async function(){
 
     msg.innerHTML = "Scanning...";
 
-    const codeReader = new ZXing.BrowserQRCodeReader();
+  const codeReader = new ZXing.BrowserMultiFormatReader();
 
     codeReader.decodeFromVideoDevice(
       null,
