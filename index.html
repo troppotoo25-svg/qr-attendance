@@ -132,17 +132,20 @@ startBtn.onclick = async function(){
 
   try{
 
-    const stream = await navigator.mediaDevices.getUserMedia({
-      video: true,
-      audio: false
-    });
+   const stream = await navigator.mediaDevices.getUserMedia({
+  video: {
+    facingMode: { ideal: "environment" }
+  },
+  audio: false
+});
 
     video.srcObject = stream;
     await video.play();
+    alert("Camera Started");
 
     msg.innerHTML = "Scanning...";
 
-    const codeReader = new ZXing.BrowserQRCodeReader();
+   const codeReader = new ZXing.BrowserMultiFormatReader();
 
     codeReader.decodeFromVideoDevice(
       null,
@@ -150,7 +153,7 @@ startBtn.onclick = async function(){
       (result, err) => {
 
         if(result){
-
+  alert("QR FOUND: " + result.getText());
           const adm = result.getText().trim();
 
           if(scanLock && lastScannedADM === adm){
