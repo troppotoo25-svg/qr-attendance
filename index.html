@@ -151,7 +151,6 @@ const stream = await navigator.mediaDevices.getUserMedia({
       (result, err) => {
 
         if(result){
-  alert("QR FOUND: " + result.getText());
           const adm = result.getText().trim();
 
           if(scanLock && lastScannedADM === adm){
