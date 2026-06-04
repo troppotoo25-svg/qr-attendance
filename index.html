@@ -132,10 +132,14 @@ startBtn.onclick = async function(){
 
   try{
 
-    const stream = await navigator.mediaDevices.getUserMedia({
-      video: true,
-      audio: false
-    });
+  const stream = await navigator.mediaDevices.getUserMedia({
+  video: {
+    facingMode: { ideal: "environment" },
+    width: { ideal: 1280 },
+    height: { ideal: 720 }
+  },
+  audio: false
+});
 
     video.srcObject = stream;
     await video.play();
@@ -144,9 +148,21 @@ startBtn.onclick = async function(){
 
     const codeReader = new ZXing.BrowserQRCodeReader();
 
-    codeReader.decodeFromVideoDevice(
-      null,
-      video,
+    const devices =
+  await ZXing.BrowserCodeReader.listVideoInputDevices();
+
+let selectedDeviceId = devices[0].deviceId;
+
+for(const device of devices){
+  if(device.label.toLowerCase().includes("back") ||
+     device.label.toLowerCase().includes("rear")){
+    selectedDeviceId = device.deviceId;
+  }
+}
+
+codeReader.decodeFromVideoDevice(
+  selectedDeviceId,
+  video,
       (result, err) => {
 
         if(result){
