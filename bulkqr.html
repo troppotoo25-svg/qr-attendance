@@ -2,7 +2,7 @@
 <html>
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Bulk QR Generator - 8 Per Page</title>
+<title>Bulk QR Generator - 10 Per Page</title>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
@@ -19,6 +19,7 @@ margin:0;
 h2{
 text-align:center;
 color:#0b57d0;
+margin-bottom:20px;
 }
 
 .card{
@@ -51,16 +52,17 @@ margin-left:10px;
 .page{
 display:grid;
 grid-template-columns:1fr 1fr;
-gap:15px;
+grid-template-rows:repeat(5,1fr);
+gap:10px;
 margin-bottom:20px;
 page-break-after:always;
 }
 
 .qrCard{
 border:1px solid #000;
-padding:10px;
+padding:8px;
 text-align:center;
-height:250px;
+height:190px;
 display:flex;
 flex-direction:column;
 justify-content:center;
@@ -69,13 +71,13 @@ background:white;
 }
 
 .qrCard h3{
-margin:5px 0;
-font-size:18px;
+margin:3px 0;
+font-size:15px;
 }
 
 .qrCard p{
-margin:5px 0;
-font-size:16px;
+margin:3px 0;
+font-size:14px;
 font-weight:bold;
 }
 
@@ -84,6 +86,7 @@ font-weight:bold;
 body{
 background:white;
 padding:0;
+margin:0;
 }
 
 .controls,
@@ -93,8 +96,8 @@ display:none;
 
 .card{
 padding:0;
-box-shadow:none;
 border:none;
+box-shadow:none;
 }
 
 .page{
@@ -103,7 +106,7 @@ page-break-after:always;
 }
 
 .qrCard{
-height:230px;
+height:180px;
 }
 
 }
@@ -114,7 +117,7 @@ height:230px;
 
 <div class="card">
 
-<h2>Bulk QR Generator (8 Per Page)</h2>
+<h2>Bulk QR Generator (10 Per Page)</h2>
 
 <div class="controls">
 
@@ -169,12 +172,13 @@ document.getElementById("output");
 
 output.innerHTML="";
 
-for(let i=0;i<students.length;i+=8){
+for(let i=0;i<students.length;i+=10){
 
 const page=document.createElement("div");
+
 page.className="page";
 
-students.slice(i,i+8).forEach(student=>{
+students.slice(i,i+10).forEach(student=>{
 
 const card=
 document.createElement("div");
@@ -204,8 +208,8 @@ page.appendChild(card);
 
 new QRCode(qrDiv,{
 text:String(student.ADM || ""),
-width:180,
-height:180
+width:130,
+height:130
 });
 
 });
