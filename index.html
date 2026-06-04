@@ -136,7 +136,7 @@ try{
 
   stream = await navigator.mediaDevices.getUserMedia({
     video:{
-      facingMode:"user"
+     facingMode:"environment"
     },
     audio:false
   });
@@ -155,6 +155,12 @@ try{
 
 video.srcObject = stream;
 await video.play();
+  alert(
+  "Camera started: " +
+  video.videoWidth +
+  " x " +
+  video.videoHeight
+);
     msg.innerHTML = "Scanning...";
 
     const codeReader =
