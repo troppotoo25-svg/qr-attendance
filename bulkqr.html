@@ -1,49 +1,8 @@
-# Free Bulk QR Code Generator From Excel
-
-You can generate hundreds of QR codes for students FREE using:
-
-* Excel file
-* Browser
-* GitHub Pages
-
----
-
-# STEP 1 — CREATE EXCEL FILE
-
-Your Excel should look like this:
-
-| ADM  | NAME      |
-| ---- | --------- |
-| 1001 | John Doe  |
-| 1002 | Mary Anne |
-| 1003 | Brian Kim |
-
-Save as:
-
-```text
-students.xlsx
-```
-
----
-
-# STEP 2 — CREATE NEW FILE
-
-Inside your GitHub repository:
-
-```text
-bulkqr.html
-```
-
----
-
-# STEP 3 — PASTE THIS CODE
-
-```html
 <!DOCTYPE html>
 <html>
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Bulk QR Generator</title>
+<title>Bulk QR Generator - 8 Per Page</title>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
@@ -51,9 +10,10 @@ bulkqr.html
 <style>
 
 body{
-font-family:Arial;
+font-family:Arial,sans-serif;
 padding:20px;
 background:#f2f2f2;
+margin:0;
 }
 
 h2{
@@ -69,19 +29,13 @@ max-width:1200px;
 margin:auto;
 }
 
-#output{
-display:grid;
-grid-template-columns:repeat(auto-fill,minmax(220px,1fr));
-gap:20px;
-margin-top:20px;
+.controls{
+text-align:center;
+margin-bottom:20px;
 }
 
-.qrCard{
-background:white;
-border:1px solid #ccc;
-padding:15px;
-text-align:center;
-border-radius:10px;
+input[type=file]{
+padding:10px;
 }
 
 button{
@@ -91,7 +45,67 @@ color:white;
 border:none;
 border-radius:8px;
 cursor:pointer;
-margin-top:20px;
+margin-left:10px;
+}
+
+.page{
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:15px;
+margin-bottom:20px;
+page-break-after:always;
+}
+
+.qrCard{
+border:1px solid #000;
+padding:10px;
+text-align:center;
+height:250px;
+display:flex;
+flex-direction:column;
+justify-content:center;
+align-items:center;
+background:white;
+}
+
+.qrCard h3{
+margin:5px 0;
+font-size:18px;
+}
+
+.qrCard p{
+margin:5px 0;
+font-size:16px;
+font-weight:bold;
+}
+
+@media print{
+
+body{
+background:white;
+padding:0;
+}
+
+.controls,
+h2{
+display:none;
+}
+
+.card{
+padding:0;
+box-shadow:none;
+border:none;
+}
+
+.page{
+margin:0;
+page-break-after:always;
+}
+
+.qrCard{
+height:230px;
+}
+
 }
 
 </style>
@@ -100,13 +114,20 @@ margin-top:20px;
 
 <div class="card">
 
-<h2>Bulk QR Generator</h2>
+<h2>Bulk QR Generator (8 Per Page)</h2>
 
-<input type="file" id="excelFile" accept=".xlsx,.xls">
+<div class="controls">
+
+<input
+type="file"
+id="excelFile"
+accept=".xlsx,.xls">
 
 <button onclick="window.print()">
 PRINT QR CODES
 </button>
+
+</div>
 
 <div id="output"></div>
 
@@ -114,54 +135,84 @@ PRINT QR CODES
 
 <script>
 
-document.getElementById('excelFile').addEventListener('change', handleFile);
+document
+.getElementById("excelFile")
+.addEventListener("change",handleFile);
 
 function handleFile(e){
 
-const file = e.target.files[0];
+const file=e.target.files[0];
 
-const reader = new FileReader();
+if(!file)return;
 
-reader.onload = function(event){
+const reader=new FileReader();
 
-const data = new Uint8Array(event.target.result);
+reader.onload=function(event){
 
-const workbook = XLSX.read(data, {type:'array'});
+const data=
+new Uint8Array(event.target.result);
 
-const sheetName = workbook.SheetNames[0];
+const workbook=
+XLSX.read(data,{type:"array"});
 
-const worksheet = workbook.Sheets[sheetName];
+const sheetName=
+workbook.SheetNames[0];
 
-const json = XLSX.utils.sheet_to_json(worksheet);
+const worksheet=
+workbook.Sheets[sheetName];
 
-const output = document.getElementById('output');
+const students=
+XLSX.utils.sheet_to_json(worksheet);
 
-output.innerHTML = '';
+const output=
+document.getElementById("output");
 
-json.forEach(student => {
+output.innerHTML="";
 
-const card = document.createElement('div');
+for(let i=0;i<students.length;i+=8){
 
-card.className = 'qrCard';
+const page=document.createElement("div");
+page.className="page";
 
-const qrDiv = document.createElement('div');
+students.slice(i,i+8).forEach(student=>{
 
-card.innerHTML += `
-<h3>${student.NAME || ''}</h3>
-<p>${student.ADM || ''}</p>
-`;
+const card=
+document.createElement("div");
 
+card.className="qrCard";
+
+const title=
+document.createElement("h3");
+
+title.textContent=
+student.NAME || "";
+
+const adm=
+document.createElement("p");
+
+adm.textContent=
+"ADM: " + (student.ADM || "");
+
+const qrDiv=
+document.createElement("div");
+
+card.appendChild(title);
+card.appendChild(adm);
 card.appendChild(qrDiv);
 
-output.appendChild(card);
+page.appendChild(card);
 
-new QRCode(qrDiv, {
-text:String(student.ADM),
-width:150,
-height:150
+new QRCode(qrDiv,{
+text:String(student.ADM || ""),
+width:180,
+height:180
 });
 
 });
+
+output.appendChild(page);
+
+}
 
 };
 
@@ -173,57 +224,3 @@ reader.readAsArrayBuffer(file);
 
 </body>
 </html>
-```
-
----
-
-# STEP 4 — SAVE AND COMMIT
-
-On GitHub:
-
-1. Save file
-2. Commit changes
-3. Wait 30 seconds
-
----
-
-# STEP 5 — OPEN LINK
-
-Your link becomes:
-
-```text
-https://YOUR-USERNAME.github.io/qr-attendance/bulkqr.html
-```
-
-Example:
-
-```text
-https://troppotoo25-svg.github.io/qr-attendance/bulkqr.html
-```
-
----
-
-# HOW IT WORKS
-
-1. Upload Excel sheet
-2. System reads ADM numbers
-3. Generates QR codes automatically
-4. Print all QR codes
-
----
-
-# IMPORTANT
-
-Excel column names MUST be:
-
-```text
-ADM
-NAME
-```
-
-Example:
-
-| ADM  | NAME      |
-| ---- | --------- |
-| 1001 | John Doe  |
-| 1002 | Mary Anne |
