@@ -132,77 +132,78 @@ startBtn.onclick = async function(){
 
   try{
 
-  const stream = await navigator.mediaDevices.getUserMedia({
-  video: {
-    facingMode: { ideal: "environment" },
-    width: { ideal: 1280 },
-    height: { ideal: 720 }
-  },
-  audio: false
-});
+    const stream = await navigator.mediaDevices.getUserMedia({
+      video:{
+        facingMode:"environment",
+        width:{ideal:1280},
+        height:{ideal:720}
+      },
+      audio:false
+    });
 
     video.srcObject = stream;
+
     await video.play();
+
+    alert(
+      "Video: " +
+      video.videoWidth +
+      " x " +
+      video.videoHeight
+    );
 
     msg.innerHTML = "Scanning...";
 
-    const codeReader = new ZXing.BrowserQRCodeReader();
+    const codeReader =
+      new ZXing.BrowserQRCodeReader();
 
-    const devices =
-  await ZXing.BrowserCodeReader.listVideoInputDevices();
-
-let selectedDeviceId = devices[0].deviceId;
-
-for(const device of devices){
-  if(device.label.toLowerCase().includes("back") ||
-     device.label.toLowerCase().includes("rear")){
-    selectedDeviceId = device.deviceId;
-  }
-}
-
-codeReader.decodeFromVideoDevice(
-  selectedDeviceId,
-  video,
+    codeReader.decodeFromVideoDevice(
+      null,
+      video,
       (result, err) => {
 
         if(result){
 
-          const adm = result.getText().trim();
+          const adm =
+            result.getText().trim();
 
-          if(scanLock && lastScannedADM === adm){
+          if(scanLock &&
+             lastScannedADM === adm){
             return;
           }
 
           scanLock = true;
           lastScannedADM = adm;
 
-          // 🔊 beep
           beep.currentTime = 0;
-          beep.play().catch(() => {});
+          beep.play().catch(()=>{});
 
-          fetch("https://script.google.com/macros/s/AKfycbzAwy0xHs0RaYlwCQ14Ab1itixVZCFDiJ9pM9HVmnAocqPNg-Xe1adYixSeWPpH39_b/exec", {
-method: "POST",
-body: new URLSearchParams({
-adm: adm,
-mode: currentMode
-})
-})
-.then(r => r.text())
-.then(response => {
+          fetch(
+            "https://script.google.com/macros/s/AKfycbzAwy0xHs0RaYlwCQ14Ab1itixVZCFDiJ9pM9HVmnAocqPNg-Xe1adYixSeWPpH39_b/exec",
+            {
+              method:"POST",
+              body:new URLSearchParams({
+                adm:adm,
+                mode:currentMode
+              })
+            }
+          )
+          .then(r=>r.text())
+          .then(response=>{
 
-msg.innerHTML = response;
+            msg.innerHTML = response;
 
-setTimeout(() => {
-msg.innerHTML = "READY";
-scanLock = false;
-lastScannedADM = "";
-}, 5000);
+            setTimeout(()=>{
+              msg.innerHTML = "READY";
+              scanLock = false;
+              lastScannedADM = "";
+            },5000);
 
-})
-.catch(error => {
+          })
+          .catch(error=>{
 
-
-            msg.innerHTML = "ERROR: " + error;
+            msg.innerHTML =
+              "ERROR: " + error;
 
             scanLock = false;
             lastScannedADM = "";
@@ -215,13 +216,18 @@ lastScannedADM = "";
     );
 
   }
-
   catch(e){
-    alert("CAMERA ERROR: " + e.message);
+
+    alert(
+      "CAMERA ERROR: " +
+      e.name +
+      " - " +
+      e.message
+    );
+
   }
 
 };
-
 </script>
 
 </body>
