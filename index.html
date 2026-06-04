@@ -132,22 +132,32 @@ startBtn.onclick = async function(){
 
   try{
 
-    video:{
-  facingMode:{ exact:"environment" },
-  width:{ ideal:1280 },
-  height:{ ideal:720 }
-}
+    let stream;
+
+    try{
+
+      stream = await navigator.mediaDevices.getUserMedia({
+        video:{
+          facingMode:{
+            exact:"environment"
+          }
+        },
+        audio:false
+      });
+
+    }catch(e){
+
+      stream = await navigator.mediaDevices.getUserMedia({
+        video:{
+          facingMode:"environment"
+        },
+        audio:false
+      });
+
+    }
 
     video.srcObject = stream;
-
     await video.play();
-
-    alert(
-      "Video: " +
-      video.videoWidth +
-      " x " +
-      video.videoHeight
-    );
 
     msg.innerHTML = "Scanning...";
 
@@ -161,8 +171,7 @@ startBtn.onclick = async function(){
 
         if(result){
 
-          const adm =
-            result.getText().trim();
+          const adm = result.getText().trim();
 
           if(scanLock &&
              lastScannedADM === adm){
@@ -185,19 +194,19 @@ startBtn.onclick = async function(){
               })
             }
           )
-          .then(r=>r.text())
-          .then(response=>{
+          .then(r => r.text())
+          .then(response => {
 
             msg.innerHTML = response;
 
-            setTimeout(()=>{
+            setTimeout(() => {
               msg.innerHTML = "READY";
               scanLock = false;
               lastScannedADM = "";
             },5000);
 
           })
-          .catch(error=>{
+          .catch(error => {
 
             msg.innerHTML =
               "ERROR: " + error;
