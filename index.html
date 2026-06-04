@@ -130,41 +130,21 @@ function setMode(mode){
 }
 startBtn.onclick = async function(){
 
-  let stream;
+  try{
 
-try{
+   const stream = await navigator.mediaDevices.getUserMedia({
+  video: {
+    facingMode: "user"
+  },
+  audio: false
+});
 
-  stream = await navigator.mediaDevices.getUserMedia({
-    video:{
-     facingMode:"environment"
-    },
-    audio:false
-  });
+    video.srcObject = stream;
+    await video.play();
 
-}catch(e){
-
-  alert(
-    "CAMERA ERROR: " +
-    e.name +
-    " - " +
-    e.message
-  );
-  return;
-
-}
-
-video.srcObject = stream;
-await video.play();
-  alert(
-  "Camera started: " +
-  video.videoWidth +
-  " x " +
-  video.videoHeight
-);
     msg.innerHTML = "Scanning...";
 
-    const codeReader =
-      new ZXing.BrowserQRCodeReader();
+    const codeReader = new ZXing.BrowserQRCodeReader();
 
     codeReader.decodeFromVideoDevice(
       null,
@@ -175,43 +155,40 @@ await video.play();
 
           const adm = result.getText().trim();
 
-          if(scanLock &&
-             lastScannedADM === adm){
+          if(scanLock && lastScannedADM === adm){
             return;
           }
 
           scanLock = true;
           lastScannedADM = adm;
 
+          // 🔊 beep
           beep.currentTime = 0;
-          beep.play().catch(()=>{});
+          beep.play().catch(() => {});
 
-          fetch(
-            "https://script.google.com/macros/s/AKfycbzAwy0xHs0RaYlwCQ14Ab1itixVZCFDiJ9pM9HVmnAocqPNg-Xe1adYixSeWPpH39_b/exec",
-            {
-              method:"POST",
-              body:new URLSearchParams({
-                adm:adm,
-                mode:currentMode
-              })
-            }
-          )
-          .then(r => r.text())
-          .then(response => {
+          fetch("https://script.google.com/macros/s/AKfycbzAwy0xHs0RaYlwCQ14Ab1itixVZCFDiJ9pM9HVmnAocqPNg-Xe1adYixSeWPpH39_b/exec", {
+method: "POST",
+body: new URLSearchParams({
+adm: adm,
+mode: currentMode
+})
+})
+.then(r => r.text())
+.then(response => {
 
-            msg.innerHTML = response;
+msg.innerHTML = response;
 
-            setTimeout(() => {
-              msg.innerHTML = "READY";
-              scanLock = false;
-              lastScannedADM = "";
-            },5000);
+setTimeout(() => {
+msg.innerHTML = "READY";
+scanLock = false;
+lastScannedADM = "";
+}, 5000);
 
-          })
-          .catch(error => {
+})
+.catch(error => {
 
-            msg.innerHTML =
-              "ERROR: " + error;
+
+            msg.innerHTML = "ERROR: " + error;
 
             scanLock = false;
             lastScannedADM = "";
@@ -224,18 +201,13 @@ await video.play();
     );
 
   }
+
   catch(e){
-
-    alert(
-      "CAMERA ERROR: " +
-      e.name +
-      " - " +
-      e.message
-    );
-
+    alert("CAMERA ERROR: " + e.message);
   }
 
 };
+
 </script>
 
 </body>
