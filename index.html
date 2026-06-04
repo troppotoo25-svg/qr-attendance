@@ -130,9 +130,10 @@ function setMode(mode){
 }
 startBtn.onclick = async function(){
 
-  try{
 const stream = await navigator.mediaDevices.getUserMedia({
-  video: true,
+  video: {
+    facingMode: "environment"
+  },
   audio: false
 });
     video.srcObject = stream;
