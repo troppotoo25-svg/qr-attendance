@@ -130,35 +130,31 @@ function setMode(mode){
 }
 startBtn.onclick = async function(){
 
-  try{
+  let stream;
 
-    let stream;
+try{
 
-    try{
+  stream = await navigator.mediaDevices.getUserMedia({
+    video:{
+      facingMode:"user"
+    },
+    audio:false
+  });
 
-      stream = await navigator.mediaDevices.getUserMedia({
-        video:{
-          facingMode:{
-            exact:"environment"
-          }
-        },
-        audio:false
-      });
+}catch(e){
 
-    }catch(e){
+  alert(
+    "CAMERA ERROR: " +
+    e.name +
+    " - " +
+    e.message
+  );
+  return;
 
-      stream = await navigator.mediaDevices.getUserMedia({
-        video:{
-          facingMode:"environment"
-        },
-        audio:false
-      });
+}
 
-    }
-
-    video.srcObject = stream;
-    await video.play();
-
+video.srcObject = stream;
+await video.play();
     msg.innerHTML = "Scanning...";
 
     const codeReader =
