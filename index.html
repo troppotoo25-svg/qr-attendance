@@ -132,12 +132,10 @@ startBtn.onclick = async function(){
 
   try{
 
-   const stream = await navigator.mediaDevices.getUserMedia({
-  video: {
-    facingMode: "user"
-  },
-  audio: false
-});
+    const stream = await navigator.mediaDevices.getUserMedia({
+      video: true,
+      audio: false
+    });
 
     video.srcObject = stream;
     await video.play();
