@@ -262,22 +262,6 @@ PRINT REPORT
 
 <script>
 
-const DASHBOARD_PASSWORD = "INORO2026";
-
-const enteredPassword =
-  prompt("Dashboard Password:");
-
-if(enteredPassword !== DASHBOARD_PASSWORD){
-
-  alert("Wrong Password");
-
-  document.body.innerHTML =
-    "<h2>ACCESS DENIED</h2>";
-
-  throw new Error("Unauthorized");
-
-}
-
 async function loadClasses(){
 
 try{
