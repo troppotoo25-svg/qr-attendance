@@ -6,6 +6,7 @@
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
 <style>
 
@@ -126,10 +127,9 @@ type="file"
 id="excelFile"
 accept=".xlsx,.xls">
 
-<button onclick="window.print()">
-PRINT QR CODES
+<button onclick="downloadPDF()">
+📄 DOWNLOAD PDF
 </button>
-
 </div>
 
 <div id="output"></div>
@@ -221,6 +221,31 @@ output.appendChild(page);
 };
 
 reader.readAsArrayBuffer(file);
+
+}
+  function downloadPDF(){
+
+const element = document.getElementById("output");
+
+const opt = {
+    margin: 0.2,
+    filename: "Student_QR_Codes.pdf",
+    image: {
+        type: "jpeg",
+        quality: 1
+    },
+    html2canvas: {
+        scale: 3,
+        useCORS: true
+    },
+    jsPDF: {
+        unit: "mm",
+        format: "a4",
+        orientation: "portrait"
+    }
+};
+
+html2pdf().set(opt).from(element).save();
 
 }
 
