@@ -51,8 +51,8 @@ margin-left:10px;
 
 .page{
 display:grid;
-grid-template-columns:1fr 1fr;
-grid-template-rows:repeat(5,1fr);
+grid-template-columns:repeat(3,1fr);
+grid-template-rows:repeat(4,1fr);
 gap:10px;
 margin-bottom:20px;
 page-break-after:always;
@@ -62,7 +62,7 @@ page-break-after:always;
 border:1px solid #000;
 padding:8px;
 text-align:center;
-height:190px;
+height:155px;
 display:flex;
 flex-direction:column;
 justify-content:center;
@@ -172,13 +172,13 @@ document.getElementById("output");
 
 output.innerHTML="";
 
-for(let i=0;i<students.length;i+=10){
+for(let i=0;i<students.length;i+=12){
 
 const page=document.createElement("div");
 
 page.className="page";
 
-students.slice(i,i+10).forEach(student=>{
+students.slice(i,i+12).forEach(student=>{
 
 const card=
 document.createElement("div");
@@ -208,8 +208,8 @@ page.appendChild(card);
 
 new QRCode(qrDiv,{
 text:String(student.ADM || ""),
-width:130,
-height:130
+width:90,
+height:90
 });
 
 });
